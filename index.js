@@ -1,18 +1,20 @@
-class User {
-  constructor(name, surname, email) {
-    this.name = name
-    this.surname = surname
-    this.email = email
-  }
-}
-
-class Video {
-  constructor(title, description, videoUrl) {
-    this.title = title
-    this.description = description
-    this.videoUrl = videoUrl
-  }
-}
+const User = require('./user')
+const Video = require('./video')
 
 const davut = new User('Davut', 'Durmaz', 'durmaz.dvt@gmail.com')
-console.log(JSON.stringify(davut, null, 2))
+
+davut.createVideo(
+  'JavaScript OOP',
+  'JavaScript Object Oriented Programming',
+  'https://www.youtube.com/watch?v=OvD7J3Hn9Uw',
+  ['JavaScript', 'OOP']
+)
+
+davut.createVideo(
+  'JavaScript Array Methods',
+  'JavaScript Array Methods',
+  'https://www.youtube.com/watch?v=OvD7J3Hn9Uw',
+  ['JavaScript', 'Array', 'Methods']
+)
+
+console.log(davut.videos.length)
