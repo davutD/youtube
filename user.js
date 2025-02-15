@@ -8,6 +8,8 @@ class User {
     this.videos = []
   }
 
+  // TODO: Refactor these methods wherever it is required. Use uuid and the a package to resolve circular dependencies.
+
   createVideo(title, description, videoUrl, tags) {
     const video = new Video(this, title, description, videoUrl, tags)
     this.videos.push(video)
@@ -29,8 +31,8 @@ class User {
     if (video.dislikedUsers.includes(this.email))
       throw new Error(`${this.email} already disliked this video.`)
 
-    video.dislikedUsers.push(this.email)
     video.likedUsers.splice(video.likedUsers.indexOf(this.email), 1)
+    video.dislikedUsers.push(this.email)
   }
   makeComment(video, comment) {
     video.comments.push({ email: this.email, comment: comment })
