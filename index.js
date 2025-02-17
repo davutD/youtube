@@ -1,5 +1,7 @@
-const User = require('./user')
-const Video = require('./video')
+const User = require('./models/user')
+const Video = require('./models/video')
+
+const flatted = require('flatted')
 
 const davut = new User('Davut', 'Durmaz', 'durmaz.dvt@gmail.com')
 
@@ -17,4 +19,4 @@ davut.createVideo(
   ['JavaScript', 'Array', 'Methods']
 )
 
-console.log(davut.videos.length)
+console.log(flatted.parse(flatted.stringify(davut.videos[0])))

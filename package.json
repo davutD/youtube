@@ -10,5 +10,9 @@
   "license": "MIT",
   "devDependencies": {
     "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "flatted": "^3.3.2",
+    "uuid": "^11.0.5"
   }
 }

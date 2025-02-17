@@ -1,3 +1,5 @@
+// const { v4: uuidv4 } = require('uuid')
+
 class Video {
   constructor(creator, title, description, videoUrl, tags) {
     this.creator = creator
