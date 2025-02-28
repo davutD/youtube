@@ -4,7 +4,8 @@
   "description": "A youtube clone",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "watch": "nodemon --ignore '*.json'"
   },
   "author": "Davut Durmaz <durmaz.dvt@gmail.com>",
   "license": "MIT",

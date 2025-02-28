@@ -1,5 +1,6 @@
 const User = require('./models/user')
 const Video = require('./models/video')
+const db = require('./database')
 
 const flatted = require('flatted')
 
@@ -23,9 +24,17 @@ kaan.createVideo(
 // console.log(flatted.parse(flatted.stringify(davut.videos)))
 // console.log(flatted.parse(flatted.stringify(kaan.videos)))
 
-davut.subscribeUser(kaan)
-davut.makeComment(kaan.videos[0], 'Great video!')
-davut.dislikeVideo(kaan.videos[0])
-console.log(flatted.parse(flatted.stringify(kaan.videos[0])))
-davut.likeVideo(kaan.videos[0])
-console.log(flatted.parse(flatted.stringify(kaan.videos[0])))
+// davut.subscribeUser(kaan)
+// davut.makeComment(kaan.videos[0], 'Great video!')
+// davut.dislikeVideo(kaan.videos[0])
+// console.log(flatted.parse(flatted.stringify(kaan.videos[0])))
+// davut.likeVideo(kaan.videos[0])
+// console.log(flatted.parse(flatted.stringify(kaan.videos[0])))
+
+// db.save('users', [davut, kaan])
+// db.save('videos', [davut.videos, kaan.videos])
+const users = db.load('users')
+const videos = db.load('videos')
+
+users.forEach((user) => console.log(flatted.parse(flatted.stringify(user))))
+videos.forEach((video) => console.log(flatted.parse(flatted.stringify(video))))
