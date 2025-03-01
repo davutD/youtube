@@ -1,12 +1,21 @@
 const Video = require('./video')
+const { v4: uuidv4 } = require('uuid')
 
 class User {
-  constructor(name, surname, email) {
+  constructor(
+    id = uuidv4(),
+    name,
+    surname,
+    email,
+    videos = [],
+    subscribers = []
+  ) {
+    this.id = id
     this.name = name
     this.surname = surname
     this.email = email
-    this.videos = []
-    this.subscribers = []
+    this.videos = videos
+    this.subscribers = subscribers
   }
 
   createVideo(title, description, videoUrl, tags) {
@@ -46,6 +55,10 @@ class User {
       throw new Error(`${user.email} is not subscribed.`)
 
     this.subscribers.splice(this.subscribers.indexOf(user), 1)
+  }
+
+  static create({ id, name, surname, email, videos, subscribers }) {
+    return new User(id, name, surname, email, videos, subscribers)
   }
 }
 

@@ -1,11 +1,17 @@
 const User = require('./models/user')
 const Video = require('./models/video')
-const db = require('./database')
+const { userDatabase, videoDatabase } = require('./database')
 
-const flatted = require('flatted')
-
-const davut = new User('Davut', 'Durmaz', 'durmaz.dvt@gmail.com')
-const kaan = new User('Kaan', 'Yurdakos', 'yurdakos.kaan@gmail.com')
+const davut = User.create({
+  name: 'Davut',
+  surname: 'Durmaz',
+  email: 'durmaz.dvt@gmail.com',
+})
+const kaan = User.create({
+  name: 'Kaan',
+  surname: 'Yurdakos',
+  email: 'yurdakos.kaan@gmail.com',
+})
 
 davut.createVideo(
   'JavaScript OOP',
@@ -26,18 +32,14 @@ davut.makeComment(kaan.videos[0], 'Great video!')
 davut.dislikeVideo(kaan.videos[0])
 davut.likeVideo(kaan.videos[0])
 
-db.save('users', [davut, kaan])
-db.save('videos', [davut.videos, kaan.videos])
+userDatabase.save([davut, kaan])
+videoDatabase.save([davut.videos, kaan.videos])
 
-someoneNew = new User('Someone', 'New', 'newuser@gmail.com')
-db.insert('users', someoneNew)
-
-const videos = db.load('videos')
-
-// users.forEach((user) => console.log(flatted.parse(flatted.stringify(user))))
-// videos.forEach((video) => console.log(flatted.parse(flatted.stringify(video))))
-
-db.remove('users', 2)
-const davut1 = db.findByName('users', 'Davut')
-console.log(davut1)
-// users.forEach((user) => console.log(flatted.parse(flatted.stringify(user))))
+const davutClone = userDatabase.findByName('Davut')
+davutClone.createVideo(
+  'JavaScript OOP New Video',
+  'JavaScript Object Oriented Programming New Video',
+  'https://www.youtube.com/watch?v=OvD7J3Hn9Uw',
+  ['JavaScript', 'OOP']
+)
+userDatabase.update(davutClone)
