@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs').promises
 const flatted = require('flatted')
 
 class BaseDatabase {
@@ -7,11 +7,11 @@ class BaseDatabase {
     this.filename = model.name.toLowerCase()
   }
   async save(objects) {
-    fs.writeFile(`./${this.filename}.json`, flatted.stringify(objects))
+    await fs.writeFile(`./${this.filename}.json`, flatted.stringify(objects))
   }
 
   async load() {
-    const file = fs.readFileSync(`./${this.filename}.json`, 'utf8')
+    const file = await fs.readFile(`./${this.filename}.json`, 'utf8')
     const objects = flatted.parse(file)
     return objects.map(this.model.create)
   }
@@ -42,7 +42,8 @@ class BaseDatabase {
   }
 
   async find(id) {
-    return await this.load().find((o) => o.id == id)
+    const objects = await this.load()
+    return objects.find((o) => o.id == id)
   }
 
   async findBy(property, value) {
