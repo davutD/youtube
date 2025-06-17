@@ -6,29 +6,29 @@ class BaseDatabase {
     this.model = model
     this.filename = model.name.toLowerCase()
   }
-  save(objects) {
-    fs.writeFileSync(`./${this.filename}.json`, flatted.stringify(objects))
+  async save(objects) {
+    fs.writeFile(`./${this.filename}.json`, flatted.stringify(objects))
   }
 
-  load() {
+  async load() {
     const file = fs.readFileSync(`./${this.filename}.json`, 'utf8')
     const objects = flatted.parse(file)
     return objects.map(this.model.create)
   }
 
-  insert(object) {
-    const objects = this.load()
-    this.save(objects.concat(object))
+  async insert(object) {
+    const objects = await this.load()
+    return this.save(objects.concat(object))
   }
 
-  remove(index) {
-    const objects = this.load()
+  async remove(index) {
+    const objects = await this.load()
     objects.splice(index, 1)
-    this.save(objects)
+    await this.save(objects)
   }
 
-  update(object) {
-    const objects = this.load()
+  async update(object) {
+    const objects = await this.load()
 
     const index = objects.findIndex((obj) => obj.id == object.id)
 
@@ -38,15 +38,15 @@ class BaseDatabase {
       )
 
     objects.splice(index, 1, object)
-    this.save(objects)
+    await this.save(objects)
   }
 
-  find(id) {
-    return this.load().find((o) => o.id == id)
+  async find(id) {
+    return await this.load().find((o) => o.id == id)
   }
 
-  findBy(property, value) {
-    return this.load().find((o) => o[property] == value)
+  async findBy(property, value) {
+    return await this.load().find((o) => o[property] == value)
   }
 }
 
