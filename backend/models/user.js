@@ -1,65 +1,75 @@
-const Video = require('./video')
-const { v4: uuidv4 } = require('uuid')
+// const Video = require('./video')
+const mongoose = require('mongoose')
 
-class User {
-  constructor(
-    id = uuidv4(),
-    name,
-    surname,
-    email,
-    videos = [],
-    subscribers = []
-  ) {
-    this.id = id
-    this.name = name
-    this.surname = surname
-    this.email = email
-    this.videos = videos
-    this.subscribers = subscribers
-  }
+const UserSchema = new mongoose.Schema({
+  name: String,
+  surname: String,
+  email: String,
+  videos: [],
+  subscribers: [],
+})
 
-  createVideo(title, description, videoUrl, tags) {
-    const video = new Video(this, title, description, videoUrl, tags)
-    this.videos.push(video)
-  }
-  likeVideo(video) {
-    if (video.likedUsers.includes(this.email))
-      throw new Error(`${this.email} already liked this video.`)
+module.exports = mongoose.model('UserSchema', UserSchema)
 
-    video.likedUsers.push(this.email)
-    video.dislikedUsers.splice(video.dislikedUsers.indexOf(this.email), 1)
-    video.countDislikes <= 0 ? video.countDislikes == 0 : video.countDislikes--
-    video.countLikes++
-  }
-  dislikeVideo(video) {
-    if (video.dislikedUsers.includes(this.email))
-      throw new Error(`${this.email} already disliked this video.`)
+// class User {
+//   constructor(
+//     id = uuidv4(),
+//     name,
+//     surname,
+//     email,
+//     videos = [],
+//     subscribers = []
+//   ) {
+//     this.id = id
+//     this.name = name
+//     this.surname = surname
+//     this.email = email
+//     this.videos = videos
+//     this.subscribers = subscribers
+//   }
 
-    video.likedUsers.splice(video.likedUsers.indexOf(this.email), 1)
-    video.dislikedUsers.push(this.email)
-    video.countDislikes++
-    video.countLikes <= 0 ? video.countLikes == 0 : video.countLikes--
-  }
-  makeComment(video, comment) {
-    video.comments.push({ email: this.email, comment: comment })
-  }
+//   createVideo(title, description, videoUrl, tags) {
+//     const video = new Video(this, title, description, videoUrl, tags)
+//     this.videos.push(video)
+//   }
+//   likeVideo(video) {
+//     if (video.likedUsers.includes(this.email))
+//       throw new Error(`${this.email} already liked this video.`)
 
-  subscribeUser(user) {
-    if (this.subscribers.includes(user))
-      throw new Error(`${user.email} already subscribed.`)
+//     video.likedUsers.push(this.email)
+//     video.dislikedUsers.splice(video.dislikedUsers.indexOf(this.email), 1)
+//     video.countDislikes <= 0 ? video.countDislikes == 0 : video.countDislikes--
+//     video.countLikes++
+//   }
+//   dislikeVideo(video) {
+//     if (video.dislikedUsers.includes(this.email))
+//       throw new Error(`${this.email} already disliked this video.`)
 
-    this.subscribers.push(user)
-  }
-  unsubscribeUser(user) {
-    if (!this.subscribers.includes(user))
-      throw new Error(`${user.email} is not subscribed.`)
+//     video.likedUsers.splice(video.likedUsers.indexOf(this.email), 1)
+//     video.dislikedUsers.push(this.email)
+//     video.countDislikes++
+//     video.countLikes <= 0 ? video.countLikes == 0 : video.countLikes--
+//   }
+//   makeComment(video, comment) {
+//     video.comments.push({ email: this.email, comment: comment })
+//   }
 
-    this.subscribers.splice(this.subscribers.indexOf(user), 1)
-  }
+//   subscribeUser(user) {
+//     if (this.subscribers.includes(user))
+//       throw new Error(`${user.email} already subscribed.`)
 
-  static create({ id, name, surname, email, videos, subscribers }) {
-    return new User(id, name, surname, email, videos, subscribers)
-  }
-}
+//     this.subscribers.push(user)
+//   }
+//   unsubscribeUser(user) {
+//     if (!this.subscribers.includes(user))
+//       throw new Error(`${user.email} is not subscribed.`)
 
-module.exports = User
+//     this.subscribers.splice(this.subscribers.indexOf(user), 1)
+//   }
+
+//   static create({ id, name, surname, email, videos, subscribers }) {
+//     return new User(id, name, surname, email, videos, subscribers)
+//   }
+// }
+
+// module.exports = User

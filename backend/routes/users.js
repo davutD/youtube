@@ -1,17 +1,15 @@
-const flatted = require('flatted')
 const { userDatabase } = require('../database')
-
 const router = require('express').Router()
 
 router.get('/', async (req, res) => {
   const users = await userDatabase.load()
-  res.send(flatted.stringify(users))
+  res.send(users)
 })
 
 router.get('/:id', async (req, res) => {
   const user = await userDatabase.find(req.params.id)
   if (!user) res.status(404).send('Cannot find the user!!')
-  res.send(flatted.stringify(user))
+  res.send(user)
 })
 
 router.post('/', async (req, res) => {
@@ -20,15 +18,22 @@ router.post('/', async (req, res) => {
 })
 
 router.post('/:id/videos', async (req, res) => {
-  const user = await userDatabase.find(req.params.id)
+  const { id } = req.params
+  const user = await userDatabase.find(id)
   user.createVideo(req.body)
   await userDatabase.update(user)
-  res.status(201).send(flatted.stringify(user))
+  res.status(201).send(user)
+})
+
+router.patch('/:id', async (req, res) => {
+  const { id } = req.params
+  const user = await userDatabase.update(id, req.body)
+  res.send(user)
 })
 
 router.delete('/:id', async (req, res) => {
-  const { id } = req.params.id
-  await userDatabase.removeBy('id', id)
+  const { id } = req.params
+  await userDatabase.removeBy('_id', id)
   res.send(`User with id of ${id} is successfully deleted.`)
 })
 
