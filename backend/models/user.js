@@ -1,15 +1,20 @@
-// const Video = require('./video')
 const mongoose = require('mongoose')
 
-const UserSchema = new mongoose.Schema({
-  name: String,
-  surname: String,
-  email: String,
-  videos: [],
-  subscribers: [],
-})
+const UserSchema = new mongoose.Schema(
+  {
+    name: String,
+    surname: String,
+    email: String,
+    videos: [],
+    subscribers: [],
+    comments: [],
+  },
+  {
+    timestamps: true,
+  }
+)
 
-module.exports = mongoose.model('UserSchema', UserSchema)
+module.exports = mongoose.model('User', UserSchema)
 
 // class User {
 //   constructor(
@@ -28,10 +33,6 @@ module.exports = mongoose.model('UserSchema', UserSchema)
 //     this.subscribers = subscribers
 //   }
 
-//   createVideo(title, description, videoUrl, tags) {
-//     const video = new Video(this, title, description, videoUrl, tags)
-//     this.videos.push(video)
-//   }
 //   likeVideo(video) {
 //     if (video.likedUsers.includes(this.email))
 //       throw new Error(`${this.email} already liked this video.`)
