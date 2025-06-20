@@ -1,13 +1,35 @@
 const mongoose = require('mongoose')
+const { Schema } = mongoose
 
-const UserSchema = new mongoose.Schema(
+const UserSchema = new Schema(
   {
-    name: String,
-    surname: String,
-    email: String,
-    videos: [],
-    subscribers: [],
-    comments: [],
+    name: {
+      type: String,
+      required: [true, 'Name is required'],
+      trim: true,
+      minLength: [2, 'Name must be at least 2 characters'],
+      maxLength: [50, 'Name cannot exceed 50 characters'],
+    },
+    surname: {
+      type: String,
+      required: [true, 'Surname is required'],
+      trim: true,
+      minLength: [2, 'Surname must be at least 2 characters'],
+      maxLength: [50, 'Surname cannot exceed 50 characters'],
+    },
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+      unique: true,
+      lowercase: true,
+      trim: true,
+      match: [/.+@.+\..+/, 'Please enter a valid email address'],
+      minLength: [2, 'Email must be at least 2 characters'],
+      maxLength: [50, 'Email cannot exceed 50 characters'],
+    },
+    videos: [{ type: Schema.Types.ObjectId, ref: 'Video' }],
+    subscribers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   },
   {
     timestamps: true,
