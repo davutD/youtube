@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const autopopulate = require('mongoose-autopopulate')
+
 const { Schema } = mongoose
 
 const UserSchema = new Schema(
@@ -27,14 +29,34 @@ const UserSchema = new Schema(
       minLength: [2, 'Email must be at least 2 characters'],
       maxLength: [50, 'Email cannot exceed 50 characters'],
     },
-    videos: [{ type: Schema.Types.ObjectId, ref: 'Video' }],
-    subscribers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    videos: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Video',
+        autopopulate: { maxDepth: 1 },
+      },
+    ],
+    subscribers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        autopopulate: { maxDepth: 1 },
+      },
+    ],
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
+        autopopulate: { maxDepth: 1 },
+      },
+    ],
   },
   {
     timestamps: true,
   }
 )
+
+UserSchema.plugin(autopopulate)
 
 module.exports = mongoose.model('User', UserSchema)
 

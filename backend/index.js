@@ -1,12 +1,16 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const usersRouter = require('./routes/users')
+const videosRouter = require('./routes/videos')
+const commentsRouter = require('./routes/comments')
 const indexRouter = require('./routes/index')
 require('./mongo-connection')
 
 const app = express()
 app.use(bodyParser.json())
 app.use('/users', usersRouter)
+app.use('/videos', videosRouter)
+app.use('/comments', commentsRouter)
 app.use('/', indexRouter)
 
 app.listen(3000, () => {

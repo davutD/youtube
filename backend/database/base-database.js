@@ -3,11 +3,11 @@ class BaseDatabase {
     this.model = model
   }
   async save(objects) {
-    return await this.model.insertMany(objects)
+    return this.model.insertMany(objects)
   }
 
   async load() {
-    return await this.model.find()
+    return this.model.find()
   }
 
   async insert(object) {
@@ -20,15 +20,15 @@ class BaseDatabase {
   }
 
   async update(id, body) {
-    return await this.model.findByIdAndUpdate(id, body, { new: true })
+    return this.model.findByIdAndUpdate(id, body, { new: true })
   }
 
   async find(id) {
-    return await this.model.findById(id)
+    return this.model.findById(id)
   }
 
   async findBy(property, value) {
-    return await this.model.find({ [property]: value })
+    return this.model.find({ [property]: value })
   }
 }
 

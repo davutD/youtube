@@ -17,13 +17,12 @@ router.post('/', async (req, res) => {
   res.status(201).send(newUser)
 })
 
-// router.post('/:id/videos', async (req, res) => {
-//   const { id } = req.params
-//   const user = await userDatabase.find(id)
-//   user.createVideo(req.body)
-//   await userDatabase.update(user)
-//   res.status(201).send(user)
-// })
+router.post('/:id/videos', async (req, res) => {
+  const { id } = req.params
+  const user = await userDatabase.find(id)
+  const video = await userDatabase.createVideo(user, req.body)
+  res.status(201).send(video)
+})
 
 router.patch('/:id', async (req, res) => {
   const { id } = req.params

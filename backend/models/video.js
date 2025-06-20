@@ -1,9 +1,16 @@
 const mongoose = require('mongoose')
+const autopopulate = require('mongoose-autopopulate')
+
 const { Schema } = mongoose
 
 const VideoSchema = new Schema(
   {
-    creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    creator: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      autopopulate: { maxDepth: 1 },
+    },
     title: {
       type: String,
       required: [true, 'Title is required'],
@@ -26,13 +33,33 @@ const VideoSchema = new Schema(
       maxLength: [3000, 'Video Url cannot exceed 3000 character'],
     },
     tags: [],
-    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
-    likedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    dislikedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
+        autopopulate: { maxDepth: 1 },
+      },
+    ],
+    likedUsers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        autopopulate: { maxDepth: 1 },
+      },
+    ],
+    dislikedUsers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        autopopulate: { maxDepth: 1 },
+      },
+    ],
   },
   {
     timestamps: true,
   }
 )
+
+VideoSchema.plugin(autopopulate)
 
 module.exports = mongoose.model('Video', VideoSchema)

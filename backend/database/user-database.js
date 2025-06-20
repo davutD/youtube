@@ -1,10 +1,20 @@
 const BaseDatabase = require('./base-database')
+const videoDatabase = require('./video-database')
 const User = require('../models/user')
 
 class UserDatabase extends BaseDatabase {
   async findByName(name) {
-    const objects = await this.load()
-    return objects.find((object) => object.name === name)
+    return this.findBy('name', name)
+  }
+
+  async createVideo(user, videoDetails) {
+    const video = await videoDatabase.insert({
+      creator: user._id,
+      ...videoDetails,
+    })
+    user.videos.push(video)
+    await user.save()
+    return video
   }
 }
 

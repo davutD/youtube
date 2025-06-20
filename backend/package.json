@@ -17,6 +17,7 @@
     "express": "^5.1.0",
     "flatted": "^3.3.2",
     "mongoose": "^8.16.0",
+    "mongoose-autopopulate": "^1.1.0",
     "uuid": "^11.0.5"
   }
 }
