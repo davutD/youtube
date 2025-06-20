@@ -1,7 +1,7 @@
-const BaseDatabase = require('./base-database')
+const BaseService = require('./base-service')
 const Video = require('../models/video')
 
-class VideoDatabase extends BaseDatabase {
+class VideoService extends BaseService {
   async findByTitle(title) {
     return this.findBy('title', title)
   }
@@ -10,4 +10,4 @@ class VideoDatabase extends BaseDatabase {
   }
 }
 
-module.exports = new VideoDatabase(Video)
+module.exports = new VideoService(Video)
