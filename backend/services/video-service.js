@@ -11,6 +11,10 @@ class VideoService extends BaseService {
   async deleteVideo(videoId) {
     return this.removeBy('_id', videoId)
   }
+
+  async deleteVideosByUserId(userId) {
+    return await Video.deleteMany({ creator: userId })
+  }
 }
 
 module.exports = new VideoService(Video)

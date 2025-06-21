@@ -31,7 +31,7 @@ router.patch('/:userId', async (req, res) => {
 
 router.delete('/:userId', async (req, res) => {
   const { userId } = req.params
-  await userService.removeBy('_id', userId)
+  await userService.deleteUser(userId)
   res.send(`User with id of ${userId} is successfully deleted.`)
 })
 

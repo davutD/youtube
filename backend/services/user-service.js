@@ -34,6 +34,13 @@ class UserService extends BaseService {
     await userToUnsubscribe.save()
     return true
   }
+
+  async deleteUser(userId) {
+    const user = await this.find(userId)
+    await videoService.deleteVideosByUserId(user._id)
+    await this.removeBy('_id', user._id)
+    return true
+  }
 }
 
 module.exports = new UserService(User)

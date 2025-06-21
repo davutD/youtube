@@ -85,22 +85,4 @@ module.exports = mongoose.model('User', UserSchema)
 //     video.comments.push({ email: this.email, comment: comment })
 //   }
 
-//   subscribeUser(user) {
-//     if (this.subscribers.includes(user))
-//       throw new Error(`${user.email} already subscribed.`)
-
-//     this.subscribers.push(user)
-//   }
-//   unsubscribeUser(user) {
-//     if (!this.subscribers.includes(user))
-//       throw new Error(`${user.email} is not subscribed.`)
-
-//     this.subscribers.splice(this.subscribers.indexOf(user), 1)
-//   }
-
-//   static create({ id, name, surname, email, videos, subscribers }) {
-//     return new User(id, name, surname, email, videos, subscribers)
-//   }
-// }
-
 // module.exports = User
