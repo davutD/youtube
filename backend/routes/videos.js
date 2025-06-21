@@ -18,4 +18,10 @@ router.get('/:videoId', async (req, res) => {
   res.send(video)
 })
 
+router.get('/:videoId/comments', async (req, res) => {
+  const videoId = req.params.videoId
+  const comments = await videoService.findCommentsByVideo(videoId)
+  res.send(comments)
+})
+
 module.exports = router

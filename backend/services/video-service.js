@@ -13,6 +13,11 @@ class VideoService extends BaseService {
     return this.model.findOne({ _id: videoId, creator: userId })
   }
 
+  async findCommentsByVideo(videoId) {
+    const video = await this.find(videoId)
+    return video.comments
+  }
+
   async deleteVideo(videoId) {
     return this.removeBy('_id', videoId)
   }
