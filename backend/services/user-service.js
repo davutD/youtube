@@ -95,6 +95,19 @@ class UserService extends BaseService {
     await userVideo.save()
     return comment
   }
+
+  async deleteComment(userId, videoId, commentId) {
+    const user = await this.find(userId)
+    const video = await videoService.findVideoByUserId(user._id, videoId)
+    const commentExistsOnVideo = video.comments.some((comment) =>
+      comment._id.equals(commentId)
+    )
+    if (!commentExistsOnVideo) {
+      throw new Error('Comment could not be found on this video.')
+    }
+    await commentService.removeBy('_id', commentId)
+    return true
+  }
 }
 
 module.exports = new UserService(User)

@@ -71,13 +71,13 @@ router.post('/:userId/video/:videoId/comments', async (req, res) => {
   res.status(201).send(comment)
 })
 
-// router.delete(
-//   '/:userId/video/:videoId/comments/:commentId',
-//   async (req, res) => {
-//     const userId = req.params.userId
-//     const video = await userService.makeComment(userId, req.body)
-//     res.status(201).send(video)
-//   }
-// )
+router.delete(
+  '/:userId/video/:videoId/comments/:commentId',
+  async (req, res) => {
+    const { userId, videoId, commentId } = req.params
+    await userService.deleteComment(userId, videoId, commentId)
+    res.send(`Comment with ${commentId} id deleted`)
+  }
+)
 
 module.exports = router
