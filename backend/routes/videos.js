@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
 
 router.get('/search', async (req, res) => {
   const userId = req.query.userId
-  const videos = await videoService.findByCreatorId(userId)
+  const videos = await videoService.findAllByCreatorId(userId)
   res.send(videos)
 })
 

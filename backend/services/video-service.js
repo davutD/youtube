@@ -5,9 +5,14 @@ class VideoService extends BaseService {
   async findByTitle(title) {
     return this.findBy('title', title)
   }
-  async findByCreatorId(creatorId) {
+  async findAllByCreatorId(creatorId) {
     return this.findBy('creator', creatorId)
   }
+
+  async findVideoByUserId(userId, videoId) {
+    return this.model.findOne({ _id: videoId, creator: userId })
+  }
+
   async deleteVideo(videoId) {
     return this.removeBy('_id', videoId)
   }
