@@ -29,27 +29,6 @@ const UserSchema = new Schema(
       minLength: [2, 'Email must be at least 2 characters'],
       maxLength: [50, 'Email cannot exceed 50 characters'],
     },
-    videos: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Video',
-        autopopulate: { maxDepth: 1 },
-      },
-    ],
-    subscribers: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        autopopulate: { maxDepth: 1 },
-      },
-    ],
-    comments: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Comment',
-        autopopulate: { maxDepth: 1 },
-      },
-    ],
   },
   {
     timestamps: true,

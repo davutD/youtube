@@ -18,9 +18,8 @@ router.post('/', async (req, res) => {
 })
 
 router.post('/:userId/videos', async (req, res) => {
-  const { userId } = req.params
-  const user = await userService.find(userId)
-  const video = await userService.createVideo(user, req.body)
+  const userId = req.params.userId
+  const video = await userService.createVideo(userId, req.body)
   res.status(201).send(video)
 })
 

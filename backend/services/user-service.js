@@ -7,12 +7,12 @@ class UserService extends BaseService {
     return this.findBy('name', name)
   }
 
-  async createVideo(user, videoDetails) {
+  async createVideo(userId, videoDetails) {
+    const user = await this.find(userId)
     const video = await videoService.insert({
       creator: user._id,
       ...videoDetails,
     })
-    user.videos.push(video)
     await video.save()
     return video
   }
