@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
 
 router.get('/search', async (req, res) => {
   const userId = req.query.userId
-  const comments = await commentService.findByCreatorId(userId)
+  const comments = await commentService.findAllByCreatorId(userId)
   res.send(comments)
 })
 
