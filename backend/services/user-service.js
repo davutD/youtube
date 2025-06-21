@@ -16,6 +16,15 @@ class UserService extends BaseService {
     await video.save()
     return video
   }
+
+  async subscribe(userId, subscribeId) {
+    const user = await this.find(userId)
+    const userToSubscribe = await this.find(subscribeId)
+    userToSubscribe.subscribers.push(user._id)
+    user.save()
+    userToSubscribe.save()
+    return userToSubscribe
+  }
 }
 
 module.exports = new UserService(User)

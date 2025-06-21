@@ -29,6 +29,13 @@ const UserSchema = new Schema(
       minLength: [2, 'Email must be at least 2 characters'],
       maxLength: [50, 'Email cannot exceed 50 characters'],
     },
+    subscribers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        autopopulate: { maxDepth: 1 },
+      },
+    ],
   },
   {
     timestamps: true,
