@@ -13,7 +13,11 @@ class VideoService extends BaseService {
   }
 
   async deleteVideosByUserId(userId) {
-    return await Video.deleteMany({ creator: userId })
+    return await this.model.deleteMany({ creator: userId })
+  }
+
+  async deleteVideoByUserId(userId, videoId) {
+    return await this.model.findOneAndDelete({ _id: videoId, creator: userId })
   }
 }
 

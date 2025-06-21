@@ -48,16 +48,28 @@ router.delete('/:userId/subscribers/:subscribeId', async (req, res) => {
   res.send(`User with id of ${subscribeId} is successfully unsubscribed.`)
 })
 
-router.post('/:userId/likes/:videoId', async (req, res) => {
+router.post('/:userId/likesVideo/:videoId', async (req, res) => {
   const { userId, videoId } = req.params
   const video = await userService.likeVideo(userId, videoId)
   res.send(video)
 })
 
-router.delete('/:userId/likes/:videoId', async (req, res) => {
+router.delete('/:userId/likesVideo/:videoId', async (req, res) => {
   const { userId, videoId } = req.params
   const video = await userService.dislikeVideo(userId, videoId)
   res.send(video)
 })
+
+router.delete('/:userId/videos/:videoId', async (req, res) => {
+  const { userId, videoId } = req.params
+  await userService.deleteVideo(userId, videoId)
+  res.send(`Video with ${videoId} id deleted`)
+})
+
+// router.post('/:userId/comments/:videoId', async (req, res) => {
+//   const userId = req.params.userId
+//   const video = await userService.makeComment(userId, req.body)
+//   res.status(201).send(video)
+// })
 
 module.exports = router

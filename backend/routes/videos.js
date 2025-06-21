@@ -18,10 +18,4 @@ router.get('/:videoId', async (req, res) => {
   res.send(video)
 })
 
-router.delete('/:videoId', async (req, res) => {
-  const videoId = req.params.videoId
-  await videoService.deleteVideo(videoId)
-  res.send(`Video with ${videoId} id deleted`)
-})
-
 module.exports = router

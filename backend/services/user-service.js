@@ -17,6 +17,13 @@ class UserService extends BaseService {
     return video
   }
 
+  async deleteVideo(userId, videoId) {
+    const user = await this.find(userId)
+    const video = await videoService.find(videoId)
+    await videoService.deleteVideoByUserId(user._id, video._id)
+    return true
+  }
+
   async subscribe(userId, subscribeId) {
     const user = await this.find(userId)
     const userToSubscribe = await this.find(subscribeId)
