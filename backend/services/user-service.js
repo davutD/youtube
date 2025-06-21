@@ -1,5 +1,6 @@
 const BaseService = require('./base-service')
 const videoService = require('./video-service')
+const commentService = require('./comment-service')
 const User = require('../models/user')
 
 class UserService extends BaseService {
@@ -82,11 +83,17 @@ class UserService extends BaseService {
     return video
   }
 
-  async makeComment(userId, videoId) {
+  async makeComment(userId, videoId, content) {
     const user = await this.find(userId)
     const video = await videoService.find(videoId)
-    const all = await videoService.findVideoByUserId(user._id, video._id)
-    return all
+    const userVideo = await videoService.findVideoByUserId(user._id, video._id)
+    const comment = await commentService.insert({
+      creator: user._id,
+      ...content,
+    })
+    userVideo.comments.addToSet(comment._id)
+    await userVideo.save()
+    return comment
   }
 }
 

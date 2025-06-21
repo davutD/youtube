@@ -67,7 +67,7 @@ router.delete('/:userId/videos/:videoId', async (req, res) => {
 
 router.post('/:userId/video/:videoId/comments', async (req, res) => {
   const { userId, videoId } = req.params
-  const comment = await userService.makeComment(userId, videoId)
+  const comment = await userService.makeComment(userId, videoId, req.body)
   res.status(201).send(comment)
 })
 
