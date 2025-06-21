@@ -2,7 +2,7 @@ const BaseService = require('./base-service')
 const Comment = require('../models/comment')
 
 class CommentService extends BaseService {
-  async findByCreatorId(creatorId) {
+  async findAllByCreatorId(creatorId) {
     return this.findBy('creator', creatorId)
   }
 }
