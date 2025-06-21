@@ -6,7 +6,7 @@ class VideoService extends BaseService {
     return this.findBy('title', title)
   }
   async findByCreatorId(creatorId) {
-    return this.findBy('user', creatorId)
+    return this.findBy('creator', creatorId)
   }
 }
 
