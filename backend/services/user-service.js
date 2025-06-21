@@ -90,6 +90,7 @@ class UserService extends BaseService {
     const userVideo = await videoService.findVideoByUserId(user._id, video._id)
     const comment = await commentService.insert({
       creator: user._id,
+      video: video._id,
       ...content,
     })
     userVideo.comments.addToSet(comment._id)
