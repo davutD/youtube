@@ -35,11 +35,17 @@ router.delete('/:userId', async (req, res) => {
   res.send(`User with id of ${userId} is successfully deleted.`)
 })
 
-router.post('/:userId/subscribe', async (req, res) => {
+router.post('/:userId/subscribers', async (req, res) => {
   const userId = req.params.userId
   const subscribeId = req.body.subscribeId
   const userToSubscribe = await userService.subscribe(userId, subscribeId)
   res.send(userToSubscribe)
+})
+
+router.delete('/:userId/subscribers/:subscribeId', async (req, res) => {
+  const { userId, subscribeId } = req.params
+  await userService.unsubscribe(userId, subscribeId)
+  res.send(`User with id of ${subscribeId} is successfully unsubscribed.`)
 })
 
 module.exports = router
