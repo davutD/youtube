@@ -29,7 +29,7 @@ class UserService extends BaseService {
   async unsubscribe(userId, subscribeId) {
     const user = await this.find(userId)
     const userToUnsubscribe = await this.find(subscribeId)
-    userToUnsubscribe.subscribers.pull(userId)
+    userToUnsubscribe.subscribers.pull(user._id)
     await user.save()
     await userToUnsubscribe.save()
     return true
