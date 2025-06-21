@@ -20,7 +20,7 @@ class UserService extends BaseService {
   async subscribe(userId, subscribeId) {
     const user = await this.find(userId)
     const userToSubscribe = await this.find(subscribeId)
-    userToSubscribe.subscribers.push(user._id)
+    userToSubscribe.subscribers.addToSet(user._id)
     await user.save()
     await userToSubscribe.save()
     return userToSubscribe
@@ -40,6 +40,32 @@ class UserService extends BaseService {
     await videoService.deleteVideosByUserId(user._id)
     await this.removeBy('_id', user._id)
     return true
+  }
+
+  async likeVideo(userId, videoId) {
+    const user = await this.find(userId)
+    const video = await videoService.find(videoId)
+    if (video.likedUsers.some((id) => id.equals(user._id))) {
+      video.likedUsers.pull(user._id)
+    } else {
+      video.likedUsers.addToSet(user._id)
+      video.dislikedUsers.pull(user._id)
+    }
+    await video.save()
+    return video
+  }
+
+  async dislikeVideo(userId, videoId) {
+    const user = await this.find(userId)
+    const video = await videoService.find(videoId)
+    if (video.dislikedUsers.some((id) => id.equals(user._id))) {
+      video.dislikedUsers.pull(user._id)
+    } else {
+      video.dislikedUsers.addToSet(user._id)
+      video.likedUsers.pull(user._id)
+    }
+    await video.save()
+    return video
   }
 }
 
