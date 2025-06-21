@@ -53,6 +53,7 @@ class UserService extends BaseService {
       { $pull: { subscribers: user._id } }
     )
     await videoService.deleteVideosByUserId(user._id)
+    await commentService.deleteCommentsByUserId(user._id)
     await this.removeBy('_id', user._id)
     return true
   }
