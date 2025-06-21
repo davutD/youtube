@@ -8,6 +8,9 @@ class CommentService extends BaseService {
   async deleteCommentsByUserId(userId) {
     return this.model.deleteMany({ creator: userId })
   }
+  async deleteCommentsByVideoId(videoId) {
+    return this.model.deleteMany({ video: videoId })
+  }
 }
 
 module.exports = new CommentService(Comment)

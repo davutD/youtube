@@ -1,4 +1,5 @@
 const BaseService = require('./base-service')
+const commentService = require('./comment-service')
 const Video = require('../models/video')
 
 class VideoService extends BaseService {
@@ -27,6 +28,7 @@ class VideoService extends BaseService {
   }
 
   async deleteVideoByUserId(userId, videoId) {
+    await commentService.deleteCommentsByVideoId(videoId)
     return await this.model.findOneAndDelete({ _id: videoId, creator: userId })
   }
 }
