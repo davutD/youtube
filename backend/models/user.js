@@ -62,25 +62,6 @@ module.exports = mongoose.model('User', UserSchema)
 //     this.videos = videos
 //     this.subscribers = subscribers
 //   }
-
-//   likeVideo(video) {
-//     if (video.likedUsers.includes(this.email))
-//       throw new Error(`${this.email} already liked this video.`)
-
-//     video.likedUsers.push(this.email)
-//     video.dislikedUsers.splice(video.dislikedUsers.indexOf(this.email), 1)
-//     video.countDislikes <= 0 ? video.countDislikes == 0 : video.countDislikes--
-//     video.countLikes++
-//   }
-//   dislikeVideo(video) {
-//     if (video.dislikedUsers.includes(this.email))
-//       throw new Error(`${this.email} already disliked this video.`)
-
-//     video.likedUsers.splice(video.likedUsers.indexOf(this.email), 1)
-//     video.dislikedUsers.push(this.email)
-//     video.countDislikes++
-//     video.countLikes <= 0 ? video.countLikes == 0 : video.countLikes--
-//   }
 //   makeComment(video, comment) {
 //     video.comments.push({ email: this.email, comment: comment })
 //   }
