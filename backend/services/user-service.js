@@ -13,7 +13,7 @@ class UserService extends BaseService {
       ...videoDetails,
     })
     user.videos.push(video)
-    await user.save()
+    await video.save()
     return video
   }
 }

@@ -8,6 +8,9 @@ class VideoService extends BaseService {
   async findByCreatorId(creatorId) {
     return this.findBy('creator', creatorId)
   }
+  async deleteVideo(videoId) {
+    return this.removeBy('_id', videoId)
+  }
 }
 
 module.exports = new VideoService(Video)

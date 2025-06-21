@@ -12,10 +12,16 @@ router.get('/search', async (req, res) => {
   res.send(videos)
 })
 
-router.get('/:id', async (req, res) => {
-  const video = await videoService.find(req.params.id)
+router.get('/:videoId', async (req, res) => {
+  const video = await videoService.find(req.params.videoId)
   if (!video) res.status(404).send('Cannot find the video!!')
   res.send(video)
+})
+
+router.delete('/:videoId', async (req, res) => {
+  const videoId = req.params.videoId
+  await videoService.deleteVideo(videoId)
+  res.send(`Video with ${videoId} id deleted`)
 })
 
 module.exports = router
