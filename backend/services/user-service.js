@@ -25,6 +25,9 @@ class UserService extends BaseService {
   }
 
   async subscribe(userId, subscribeId) {
+    if (userId === subscribeId) {
+      throw new Error('You cannot subscribe to yourself')
+    }
     const user = await this.find(userId)
     const userToSubscribe = await this.find(subscribeId)
     userToSubscribe.subscribers.addToSet(user._id)
@@ -44,6 +47,10 @@ class UserService extends BaseService {
 
   async deleteUser(userId) {
     const user = await this.find(userId)
+    await this.model.updateMany(
+      { subscribers: user._id },
+      { $pull: { subscribers: user._id } }
+    )
     await videoService.deleteVideosByUserId(user._id)
     await this.removeBy('_id', user._id)
     return true
@@ -73,6 +80,13 @@ class UserService extends BaseService {
     }
     await video.save()
     return video
+  }
+
+  async makeComment(userId, videoId) {
+    const user = await this.find(userId)
+    const video = await videoService.find(videoId)
+    const all = await videoService.findVideoByUserId(user._id, video._id)
+    return all
   }
 }
 
