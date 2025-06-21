@@ -11,6 +11,12 @@ const CommentSchema = new Schema(
       required: true,
       autopopulate: { maxDepth: 1 },
     },
+    video: {
+      type: Schema.Types.ObjectId,
+      ref: 'Video',
+      required: true,
+      autopopulate: false,
+    },
     content: {
       type: String,
       required: [true, 'Content is required'],
