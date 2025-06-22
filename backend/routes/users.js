@@ -97,4 +97,14 @@ router.post('/:userId/likesComment/:commentId', async (req, res, next) => {
   res.send(comment)
 })
 
+router.delete('/:userId/likesComment/:commentId', async (req, res, next) => {
+  try {
+    const { userId, commentId } = req.params
+    const comment = await userService.dislikeComment(userId, commentId)
+    res.send(comment)
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router
