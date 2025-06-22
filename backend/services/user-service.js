@@ -87,7 +87,7 @@ class UserService extends BaseService {
   async makeComment(userId, videoId, content) {
     const user = await this.find(userId)
     const video = await videoService.find(videoId)
-    const userVideo = await videoService.findVideoByUserId(user._id, video._id)
+    const userVideo = await videoService.find(video._id)
     const comment = await commentService.insert({
       creator: user._id,
       video: video._id,
