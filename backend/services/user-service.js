@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const BaseService = require('./base-service')
 const videoService = require('./video-service')
 const commentService = require('./comment-service')
@@ -143,42 +144,108 @@ class UserService extends BaseService {
     return newComment
   }
 
+  // async likeComment(userId, commentId) {
+  //   const user = await this.find(userId)
+  //   const comment = await commentService.find(commentId)
+  //   const uid = user._id
+  //   if (comment.likedUsers.some((id) => id.equals(uid))) {
+  //     comment.likedUsers.pull(uid)
+  //     comment.likeCount = Math.max(0, (comment.likeCount || 0) - 1)
+  //   } else {
+  //     comment.likedUsers.addToSet(uid)
+  //     comment.likeCount = (comment.likeCount || 0) + 1
+  //     if (comment.dislikedUsers.some((id) => id.equals(uid))) {
+  //       comment.dislikedUsers.pull(uid)
+  //       comment.dislikeCount = Math.max(0, (comment.dislikeCount || 0) - 1)
+  //     }
+  //   }
+  //   await comment.save()
+  //   return comment
+  // }
+
   async likeComment(userId, commentId) {
     const user = await this.find(userId)
     const comment = await commentService.find(commentId)
     const uid = user._id
-    if (comment.likedUsers.some((id) => id.equals(uid))) {
-      comment.likedUsers.pull(uid)
-      comment.likeCount = Math.max(0, (comment.likeCount || 0) - 1)
-    } else {
-      comment.likedUsers.addToSet(uid)
-      comment.likeCount = (comment.likeCount || 0) + 1
-      if (comment.dislikedUsers.some((id) => id.equals(uid))) {
-        comment.dislikedUsers.pull(uid)
-        comment.dislikeCount = Math.max(0, (comment.dislikeCount || 0) - 1)
-      }
+    const cid = comment._id
+    const hasLiked = await commentService.model.exists({
+      _id: cid,
+      likedUsers: uid,
+    })
+    if (hasLiked) {
+      return commentService.model.findByIdAndUpdate(
+        cid,
+        { $pull: { likedUsers: uid }, $inc: { likeCount: -1 } },
+        { new: true }
+      )
     }
-    await comment.save()
-    return comment
+    const hasDisliked = await commentService.model.exists({
+      _id: cid,
+      dislikedUsers: uid,
+    })
+    const updateOps = { $addToSet: { likedUsers: uid }, $inc: { likeCount: 1 } }
+    if (hasDisliked) {
+      updateOps.$pull = { dislikedUsers: uid }
+      updateOps.$inc.dislikeCount = -1
+    }
+    return commentService.model.findByIdAndUpdate(cid, updateOps, {
+      new: true,
+    })
   }
+
+  // async dislikeComment(userId, commentId) {
+  //   const user = await this.find(userId)
+  //   const comment = await commentService.find(commentId)
+  //   const uid = user._id
+  //   if (comment.dislikedUsers.some((id) => id.equals(uid))) {
+  //     comment.dislikedUsers.pull(uid)
+  //     comment.dislikeCount = Math.max(0, (comment.dislikeCount || 0) - 1)
+  //   } else {
+  //     comment.dislikedUsers.addToSet(uid)
+  //     comment.dislikeCount = (comment.dislikeCount || 0) + 1
+  //     if (comment.likedUsers.some((id) => id.equals(uid))) {
+  //       comment.likedUsers.pull(uid)
+  //       comment.likeCount = Math.max(0, (comment.likeCount || 0) - 1)
+  //     }
+  //   }
+  //   await comment.save()
+  //   return comment
+  // }
 
   async dislikeComment(userId, commentId) {
     const user = await this.find(userId)
     const comment = await commentService.find(commentId)
     const uid = user._id
-    if (comment.dislikedUsers.some((id) => id.equals(uid))) {
-      comment.dislikedUsers.pull(uid)
-      comment.dislikeCount = Math.max(0, (comment.dislikeCount || 0) - 1)
-    } else {
-      comment.dislikedUsers.addToSet(uid)
-      comment.dislikeCount = (comment.dislikeCount || 0) + 1
-      if (comment.likedUsers.some((id) => id.equals(uid))) {
-        comment.likedUsers.pull(uid)
-        comment.likeCount = Math.max(0, (comment.likeCount || 0) - 1)
-      }
+    const cid = comment._id
+    const hasDisliked = await commentService.model.exists({
+      _id: cid,
+      dislikedUsers: uid,
+    })
+
+    if (hasDisliked) {
+      return commentService.model.findByIdAndUpdate(
+        cid,
+        {
+          $pull: { dislikedUsers: uid },
+          $inc: { dislikeCount: -1 },
+        },
+        { new: true }
+      )
     }
-    await comment.save()
-    return comment
+    const hasLiked = await commentService.model.exists({
+      _id: cid,
+      likedUsers: uid,
+    })
+
+    const updateOps = {
+      $addToSet: { dislikedUsers: uid },
+      $inc: { dislikeCount: 1 },
+    }
+    if (hasLiked) {
+      updateOps.$pull = { likedUsers: uid }
+      updateOps.$inc.likeCount = -1
+    }
+    return commentService.model.findByIdAndUpdate(cid, updateOps, { new: true })
   }
 
   async _recursivelyDeleteComments(commentId, video) {
