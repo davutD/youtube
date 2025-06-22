@@ -80,4 +80,15 @@ router.delete(
   }
 )
 
+router.post('/:userId/video/:videoId/comments/:commentId', async (req, res) => {
+  const { userId, videoId, commentId } = req.params
+  const comment = await userService.replyComment(
+    userId,
+    videoId,
+    commentId,
+    req.body
+  )
+  res.status(201).send(comment)
+})
+
 module.exports = router
