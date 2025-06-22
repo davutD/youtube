@@ -87,14 +87,13 @@ class UserService extends BaseService {
   async makeComment(userId, videoId, content) {
     const user = await this.find(userId)
     const video = await videoService.find(videoId)
-    const userVideo = await videoService.find(video._id)
     const comment = await commentService.insert({
       creator: user._id,
       video: video._id,
       ...content,
     })
-    userVideo.comments.addToSet(comment._id)
-    await userVideo.save()
+    video.comments.addToSet(comment._id)
+    await video.save()
     return comment
   }
 
@@ -109,6 +108,26 @@ class UserService extends BaseService {
     }
     await commentService.removeBy('_id', commentId)
     return true
+  }
+
+  async replyComment(userId, videoId, commentId, content) {
+    const user = await this.find(userId)
+    const video = await videoService.find(videoId)
+    const comment = await commentService.findCommentByVideo(
+      video._id,
+      commentId
+    )
+    const newComment = await commentService.insert({
+      creator: user._id,
+      video: video._id,
+      parentComment: comment._id,
+      ...content,
+    })
+    comment.comments.addToSet(newComment._id)
+    video.comments.addToSet(newComment._id)
+    await video.save()
+    await comment.save()
+    return newComment
   }
 }
 
