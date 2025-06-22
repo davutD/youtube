@@ -131,6 +131,20 @@ class UserService extends BaseService {
     return newComment
   }
 
+  async likeComment(userId, commentId) {
+    const user = await this.find(userId)
+    const comment = await commentService.find(commentId)
+    const uid = user._id
+    if (comment.likedUsers.some((id) => id.equals(uid))) {
+      comment.likedUsers.pull(uid)
+    } else {
+      comment.likedUsers.addToSet(uid)
+      comment.dislikedUsers.pull(uid)
+    }
+    await comment.save()
+    return comment
+  }
+
   async _recursivelyDeleteComments(commentId, video) {
     const comment = await commentService.find(commentId)
     if (!comment) {
