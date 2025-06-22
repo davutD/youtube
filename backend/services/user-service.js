@@ -149,9 +149,14 @@ class UserService extends BaseService {
     const uid = user._id
     if (comment.likedUsers.some((id) => id.equals(uid))) {
       comment.likedUsers.pull(uid)
+      comment.likeCount = Math.max(0, (comment.likeCount || 0) - 1)
     } else {
       comment.likedUsers.addToSet(uid)
-      comment.dislikedUsers.pull(uid)
+      comment.likeCount = (comment.likeCount || 0) + 1
+      if (comment.dislikedUsers.some((id) => id.equals(uid))) {
+        comment.dislikedUsers.pull(uid)
+        comment.dislikeCount = Math.max(0, (comment.dislikeCount || 0) - 1)
+      }
     }
     await comment.save()
     return comment
@@ -163,9 +168,14 @@ class UserService extends BaseService {
     const uid = user._id
     if (comment.dislikedUsers.some((id) => id.equals(uid))) {
       comment.dislikedUsers.pull(uid)
+      comment.dislikeCount = Math.max(0, (comment.dislikeCount || 0) - 1)
     } else {
       comment.dislikedUsers.addToSet(uid)
-      comment.likedUsers.pull(uid)
+      comment.dislikeCount = (comment.dislikeCount || 0) + 1
+      if (comment.likedUsers.some((id) => id.equals(uid))) {
+        comment.likedUsers.pull(uid)
+        comment.likeCount = Math.max(0, (comment.likeCount || 0) - 1)
+      }
     }
     await comment.save()
     return comment
