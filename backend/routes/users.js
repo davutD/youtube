@@ -91,4 +91,10 @@ router.post('/:userId/video/:videoId/comments/:commentId', async (req, res) => {
   res.status(201).send(comment)
 })
 
+router.post('/:userId/likesComment/:commentId', async (req, res, next) => {
+  const { userId, commentId } = req.params
+  const comment = await userService.likeComment(userId, commentId)
+  res.send(comment)
+})
+
 module.exports = router
