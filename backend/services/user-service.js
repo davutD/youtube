@@ -106,7 +106,8 @@ class UserService extends BaseService {
     if (!commentExistsOnVideo) {
       throw new Error('Comment could not be found on this video.')
     }
-    await commentService.removeBy('_id', commentId)
+    await this._recursivelyDeleteComments(commentId, video)
+    await video.save()
     return true
   }
 
@@ -128,6 +129,28 @@ class UserService extends BaseService {
     await video.save()
     await comment.save()
     return newComment
+  }
+
+  async _recursivelyDeleteComments(commentId, video) {
+    const comment = await commentService.find(commentId)
+    if (!comment) {
+      return
+    }
+    if (comment.comments && comment.comments.length > 0) {
+      await Promise.all(
+        comment.comments.map((childId) =>
+          this._recursivelyDeleteComments(childId, video)
+        )
+      )
+    }
+    video.comments.pull(commentId)
+    if (comment.parentComment) {
+      await commentService.update(
+        { _id: comment.parentComment },
+        { $pull: { comments: commentId } }
+      )
+    }
+    await commentService.removeBy('_id', commentId)
   }
 }
 
