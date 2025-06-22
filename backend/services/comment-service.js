@@ -5,6 +5,9 @@ class CommentService extends BaseService {
   async findAllByCreatorId(creatorId) {
     return this.findBy('creator', creatorId)
   }
+  async findCommentByVideo(videoId, commentId) {
+    return this.model.findOne({ _id: commentId, video: videoId })
+  }
   async deleteCommentsByUserId(userId) {
     return this.model.deleteMany({ creator: userId })
   }
