@@ -9,7 +9,7 @@ const VideoSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      autopopulate: { maxDepth: 1 },
+      autopopulate: false,
     },
     title: {
       type: String,
