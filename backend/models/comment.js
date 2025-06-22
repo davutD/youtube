@@ -29,6 +29,7 @@ const CommentSchema = new Schema(
       maxLength: [5000, 'Content cannot exceed 5000 characters'],
     },
     likeCount: Number,
+    dislikeCount: Number,
     comments: [
       {
         type: Schema.Types.ObjectId,
