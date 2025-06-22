@@ -59,25 +59,6 @@ class UserService extends BaseService {
     return true
   }
 
-  // async likeVideo(userId, videoId) {
-  //   const user = await this.find(userId)
-  //   const video = await videoService.find(videoId)
-  //   const uid = user._id
-  //   if (video.likedUsers.some((id) => id.equals(uid))) {
-  //     video.likedUsers.pull(uid)
-  //     video.likeCount = Math.max(0, (video.likeCount || 0) - 1)
-  //   } else {
-  //     video.likedUsers.addToSet(uid)
-  //     video.likeCount = (video.likeCount || 0) + 1
-  //     if (video.dislikedUsers.some((id) => id.equals(uid))) {
-  //       video.dislikedUsers.pull(uid)
-  //       video.dislikeCount = Math.max(0, (video.dislikeCount || 0) - 1)
-  //     }
-  //   }
-  //   await video.save()
-  //   return video
-  // }
-
   async likeVideo(userId, videoId) {
     const user = await this.find(userId)
     const video = await videoService.find(videoId)
@@ -113,25 +94,6 @@ class UserService extends BaseService {
       new: true,
     })
   }
-
-  // async dislikeVideo(userId, videoId) {
-  //   const user = await this.find(userId)
-  //   const video = await videoService.find(videoId)
-  //   const uid = user._id
-  //   if (video.dislikedUsers.some((id) => id.equals(uid))) {
-  //     video.dislikedUsers.pull(uid)
-  //     video.dislikeCount = Math.max(0, (video.dislikeCount || 0) - 1)
-  //   } else {
-  //     video.dislikedUsers.addToSet(uid)
-  //     video.dislikeCount = (video.dislikeCount || 0) + 1
-  //     if (video.likedUsers.some((id) => id.equals(uid))) {
-  //       video.likedUsers.pull(uid)
-  //       video.likeCount = Math.max(0, (video.likeCount || 0) - 1)
-  //     }
-  //   }
-  //   await video.save()
-  //   return video
-  // }
 
   async dislikeVideo(userId, videoId) {
     const user = await this.find(userId)
@@ -214,25 +176,6 @@ class UserService extends BaseService {
     return newComment
   }
 
-  // async likeComment(userId, commentId) {
-  //   const user = await this.find(userId)
-  //   const comment = await commentService.find(commentId)
-  //   const uid = user._id
-  //   if (comment.likedUsers.some((id) => id.equals(uid))) {
-  //     comment.likedUsers.pull(uid)
-  //     comment.likeCount = Math.max(0, (comment.likeCount || 0) - 1)
-  //   } else {
-  //     comment.likedUsers.addToSet(uid)
-  //     comment.likeCount = (comment.likeCount || 0) + 1
-  //     if (comment.dislikedUsers.some((id) => id.equals(uid))) {
-  //       comment.dislikedUsers.pull(uid)
-  //       comment.dislikeCount = Math.max(0, (comment.dislikeCount || 0) - 1)
-  //     }
-  //   }
-  //   await comment.save()
-  //   return comment
-  // }
-
   async likeComment(userId, commentId) {
     const user = await this.find(userId)
     const comment = await commentService.find(commentId)
@@ -262,25 +205,6 @@ class UserService extends BaseService {
       new: true,
     })
   }
-
-  // async dislikeComment(userId, commentId) {
-  //   const user = await this.find(userId)
-  //   const comment = await commentService.find(commentId)
-  //   const uid = user._id
-  //   if (comment.dislikedUsers.some((id) => id.equals(uid))) {
-  //     comment.dislikedUsers.pull(uid)
-  //     comment.dislikeCount = Math.max(0, (comment.dislikeCount || 0) - 1)
-  //   } else {
-  //     comment.dislikedUsers.addToSet(uid)
-  //     comment.dislikeCount = (comment.dislikeCount || 0) + 1
-  //     if (comment.likedUsers.some((id) => id.equals(uid))) {
-  //       comment.likedUsers.pull(uid)
-  //       comment.likeCount = Math.max(0, (comment.likeCount || 0) - 1)
-  //     }
-  //   }
-  //   await comment.save()
-  //   return comment
-  // }
 
   async dislikeComment(userId, commentId) {
     const user = await this.find(userId)
