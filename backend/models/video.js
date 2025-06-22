@@ -33,6 +33,8 @@ const VideoSchema = new Schema(
       maxLength: [3000, 'Video Url cannot exceed 3000 character'],
     },
     tags: [],
+    likeCount: Number,
+    dislikeCount: Number,
     comments: [
       {
         type: Schema.Types.ObjectId,
