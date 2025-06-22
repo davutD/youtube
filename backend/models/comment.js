@@ -17,6 +17,11 @@ const CommentSchema = new Schema(
       required: true,
       autopopulate: false,
     },
+    parentComment: {
+      type: Schema.Types.ObjectId,
+      ref: 'Comment',
+      autopopulate: false,
+    },
     content: {
       type: String,
       required: [true, 'Content is required'],
