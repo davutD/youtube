@@ -59,42 +59,112 @@ class UserService extends BaseService {
     return true
   }
 
+  // async likeVideo(userId, videoId) {
+  //   const user = await this.find(userId)
+  //   const video = await videoService.find(videoId)
+  //   const uid = user._id
+  //   if (video.likedUsers.some((id) => id.equals(uid))) {
+  //     video.likedUsers.pull(uid)
+  //     video.likeCount = Math.max(0, (video.likeCount || 0) - 1)
+  //   } else {
+  //     video.likedUsers.addToSet(uid)
+  //     video.likeCount = (video.likeCount || 0) + 1
+  //     if (video.dislikedUsers.some((id) => id.equals(uid))) {
+  //       video.dislikedUsers.pull(uid)
+  //       video.dislikeCount = Math.max(0, (video.dislikeCount || 0) - 1)
+  //     }
+  //   }
+  //   await video.save()
+  //   return video
+  // }
+
   async likeVideo(userId, videoId) {
     const user = await this.find(userId)
     const video = await videoService.find(videoId)
     const uid = user._id
-    if (video.likedUsers.some((id) => id.equals(uid))) {
-      video.likedUsers.pull(uid)
-      video.likeCount = Math.max(0, (video.likeCount || 0) - 1)
-    } else {
-      video.likedUsers.addToSet(uid)
-      video.likeCount = (video.likeCount || 0) + 1
-      if (video.dislikedUsers.some((id) => id.equals(uid))) {
-        video.dislikedUsers.pull(uid)
-        video.dislikeCount = Math.max(0, (video.dislikeCount || 0) - 1)
-      }
+    const vid = video._id
+    const hasLiked = await videoService.model.exists({
+      _id: vid,
+      likedUsers: uid,
+    })
+    if (hasLiked) {
+      return videoService.model.findByIdAndUpdate(
+        vid,
+        {
+          $pull: { likedUsers: uid },
+          $inc: { likeCount: -1 },
+        },
+        { new: true }
+      )
     }
-    await video.save()
-    return video
+    const hasDisliked = await videoService.model.exists({
+      _id: vid,
+      dislikedUsers: uid,
+    })
+    const updateOps = {
+      $addToSet: { likedUsers: uid },
+      $inc: { likeCount: 1 },
+    }
+    if (hasDisliked) {
+      updateOps.$pull = { dislikedUsers: uid }
+      updateOps.$inc.dislikeCount = -1
+    }
+    return videoService.model.findByIdAndUpdate(vid, updateOps, {
+      new: true,
+    })
   }
+
+  // async dislikeVideo(userId, videoId) {
+  //   const user = await this.find(userId)
+  //   const video = await videoService.find(videoId)
+  //   const uid = user._id
+  //   if (video.dislikedUsers.some((id) => id.equals(uid))) {
+  //     video.dislikedUsers.pull(uid)
+  //     video.dislikeCount = Math.max(0, (video.dislikeCount || 0) - 1)
+  //   } else {
+  //     video.dislikedUsers.addToSet(uid)
+  //     video.dislikeCount = (video.dislikeCount || 0) + 1
+  //     if (video.likedUsers.some((id) => id.equals(uid))) {
+  //       video.likedUsers.pull(uid)
+  //       video.likeCount = Math.max(0, (video.likeCount || 0) - 1)
+  //     }
+  //   }
+  //   await video.save()
+  //   return video
+  // }
 
   async dislikeVideo(userId, videoId) {
     const user = await this.find(userId)
     const video = await videoService.find(videoId)
     const uid = user._id
-    if (video.dislikedUsers.some((id) => id.equals(uid))) {
-      video.dislikedUsers.pull(uid)
-      video.dislikeCount = Math.max(0, (video.dislikeCount || 0) - 1)
-    } else {
-      video.dislikedUsers.addToSet(uid)
-      video.dislikeCount = (video.dislikeCount || 0) + 1
-      if (video.likedUsers.some((id) => id.equals(uid))) {
-        video.likedUsers.pull(uid)
-        video.likeCount = Math.max(0, (video.likeCount || 0) - 1)
-      }
+    const vid = video._id
+    const hasDisliked = await videoService.model.exists({
+      _id: vid,
+      dislikedUsers: uid,
+    })
+    if (hasDisliked) {
+      return videoService.model.findByIdAndUpdate(
+        vid,
+        {
+          $pull: { dislikedUsers: uid },
+          $inc: { dislikeCount: -1 },
+        },
+        { new: true }
+      )
     }
-    await video.save()
-    return video
+    const hasLiked = await videoService.model.exists({
+      _id: vid,
+      likedUsers: uid,
+    })
+    const updateOps = {
+      $addToSet: { dislikedUsers: uid },
+      $inc: { dislikeCount: 1 },
+    }
+    if (hasLiked) {
+      updateOps.$pull = { likedUsers: uid }
+      updateOps.$inc.likeCount = -1
+    }
+    return videoService.model.findByIdAndUpdate(vid, updateOps, { new: true })
   }
 
   async makeComment(userId, videoId, content) {
