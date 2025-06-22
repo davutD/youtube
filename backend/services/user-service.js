@@ -61,11 +61,17 @@ class UserService extends BaseService {
   async likeVideo(userId, videoId) {
     const user = await this.find(userId)
     const video = await videoService.find(videoId)
-    if (video.likedUsers.some((id) => id.equals(user._id))) {
-      video.likedUsers.pull(user._id)
+    const uid = user._id
+    if (video.likedUsers.some((id) => id.equals(uid))) {
+      video.likedUsers.pull(uid)
+      video.likeCount = Math.max(0, (video.likeCount || 0) - 1)
     } else {
-      video.likedUsers.addToSet(user._id)
-      video.dislikedUsers.pull(user._id)
+      video.likedUsers.addToSet(uid)
+      video.likeCount = (video.likeCount || 0) + 1
+      if (video.dislikedUsers.some((id) => id.equals(uid))) {
+        video.dislikedUsers.pull(uid)
+        video.dislikeCount = Math.max(0, (video.dislikeCount || 0) - 1)
+      }
     }
     await video.save()
     return video
@@ -74,11 +80,17 @@ class UserService extends BaseService {
   async dislikeVideo(userId, videoId) {
     const user = await this.find(userId)
     const video = await videoService.find(videoId)
-    if (video.dislikedUsers.some((id) => id.equals(user._id))) {
-      video.dislikedUsers.pull(user._id)
+    const uid = user._id
+    if (video.dislikedUsers.some((id) => id.equals(uid))) {
+      video.dislikedUsers.pull(uid)
+      video.dislikeCount = Math.max(0, (video.dislikeCount || 0) - 1)
     } else {
-      video.dislikedUsers.addToSet(user._id)
-      video.likedUsers.pull(user._id)
+      video.dislikedUsers.addToSet(uid)
+      video.dislikeCount = (video.dislikeCount || 0) + 1
+      if (video.likedUsers.some((id) => id.equals(uid))) {
+        video.likedUsers.pull(uid)
+        video.likeCount = Math.max(0, (video.likeCount || 0) - 1)
+      }
     }
     await video.save()
     return video
