@@ -9,7 +9,7 @@ const CommentSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      autopopulate: { maxDepth: 1 },
+      autopopulate: false,
     },
     video: {
       type: Schema.Types.ObjectId,
@@ -28,21 +28,21 @@ const CommentSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: 'Comment',
-        autopopulate: { maxDepth: 1 },
+        autopopulate: false,
       },
     ],
     likedUsers: [
       {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        autopopulate: { maxDepth: 1 },
+        autopopulate: false,
       },
     ],
     dislikedUsers: [
       {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        autopopulate: { maxDepth: 1 },
+        autopopulate: false,
       },
     ],
   },
