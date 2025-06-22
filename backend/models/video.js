@@ -37,7 +37,7 @@ const VideoSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: 'Comment',
-        autopopulate: { maxDepth: 1 },
+        autopopulate: false,
       },
     ],
     likedUsers: [
