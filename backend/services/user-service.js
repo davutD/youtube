@@ -11,17 +11,29 @@ class UserService extends BaseService {
 
   async createVideo(userId, videoDetails) {
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     const video = await videoService.insert({
       creator: user._id,
       ...videoDetails,
     })
+    if (!video) {
+      throw new Error('Video could not be created.')
+    }
     await video.save()
     return video
   }
 
   async deleteVideo(userId, videoId) {
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     const video = await videoService.find(videoId)
+    if (!video) {
+      throw new Error('Video could not be found.')
+    }
     await videoService.deleteVideoByUserId(user._id, video._id)
     return true
   }
