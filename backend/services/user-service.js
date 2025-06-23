@@ -252,7 +252,13 @@ class UserService extends BaseService {
 
   async likeComment(userId, commentId) {
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     const comment = await commentService.find(commentId)
+    if (!comment) {
+      throw new Error('Comment could not be found.')
+    }
     const uid = user._id
     const cid = comment._id
     const hasLiked = await commentService.model.exists({
@@ -282,7 +288,13 @@ class UserService extends BaseService {
 
   async dislikeComment(userId, commentId) {
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     const comment = await commentService.find(commentId)
+    if (!comment) {
+      throw new Error('Comment could not be found.')
+    }
     const uid = user._id
     const cid = comment._id
     const hasDisliked = await commentService.model.exists({
