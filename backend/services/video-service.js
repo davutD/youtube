@@ -16,6 +16,9 @@ class VideoService extends BaseService {
 
   async findCommentsByVideo(videoId) {
     const video = await this.find(videoId)
+    if (!video) {
+      return []
+    }
     return video.comments
   }
 
