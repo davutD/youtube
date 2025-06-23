@@ -77,6 +77,9 @@ class UserService extends BaseService {
 
   async deleteUser(userId) {
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     await this.model.updateMany(
       { subscribers: user._id },
       { $pull: { subscribers: user._id } }
