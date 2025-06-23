@@ -43,7 +43,15 @@ class UserService extends BaseService {
       throw new Error('You cannot subscribe to yourself')
     }
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     const userToSubscribe = await this.find(subscribeId)
+    if (!userToSubscribe) {
+      throw new Error(
+        'The user you are trying to subscribe to could not be found.'
+      )
+    }
     userToSubscribe.subscribers.addToSet(user._id)
     await user.save()
     await userToSubscribe.save()
@@ -52,7 +60,15 @@ class UserService extends BaseService {
 
   async unsubscribe(userId, subscribeId) {
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     const userToUnsubscribe = await this.find(subscribeId)
+    if (!userToUnsubscribe) {
+      throw new Error(
+        'The user you are trying to unsubscribe from could not be found.'
+      )
+    }
     userToUnsubscribe.subscribers.pull(user._id)
     await user.save()
     await userToUnsubscribe.save()
