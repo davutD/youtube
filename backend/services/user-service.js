@@ -174,12 +174,21 @@ class UserService extends BaseService {
 
   async makeComment(userId, videoId, content) {
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     const video = await videoService.find(videoId)
+    if (!video) {
+      throw new Error('Video could not be found.')
+    }
     const comment = await commentService.insert({
       creator: user._id,
       video: video._id,
       ...content,
     })
+    if (!comment) {
+      throw new Error('Comment could not be created.')
+    }
     video.comments.addToSet(comment._id)
     await video.save()
     return comment
@@ -187,7 +196,15 @@ class UserService extends BaseService {
 
   async deleteComment(userId, videoId, commentId) {
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     const video = await videoService.findVideoByUserId(user._id, videoId)
+    if (!video) {
+      throw new Error(
+        'Video could not be found or does not belong to this user.'
+      )
+    }
     const commentExistsOnVideo = video.comments.some((comment) =>
       comment._id.equals(commentId)
     )
