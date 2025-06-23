@@ -218,17 +218,31 @@ class UserService extends BaseService {
 
   async replyComment(userId, videoId, commentId, content) {
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     const video = await videoService.find(videoId)
+    if (!video) {
+      throw new Error('Video could not be found.')
+    }
     const comment = await commentService.findCommentByVideo(
       video._id,
       commentId
     )
+    if (!comment) {
+      throw new Error(
+        'The comment you are trying to reply to could not be found.'
+      )
+    }
     const newComment = await commentService.insert({
       creator: user._id,
       video: video._id,
       parentComment: comment._id,
       ...content,
     })
+    if (!newComment) {
+      throw new Error('Your reply could not be created.')
+    }
     comment.comments.addToSet(newComment._id)
     video.comments.addToSet(newComment._id)
     await video.save()
