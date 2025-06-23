@@ -92,7 +92,13 @@ class UserService extends BaseService {
 
   async likeVideo(userId, videoId) {
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     const video = await videoService.find(videoId)
+    if (!video) {
+      throw new Error('Video could not be found.')
+    }
     const uid = user._id
     const vid = video._id
     const hasLiked = await videoService.model.exists({
@@ -128,7 +134,13 @@ class UserService extends BaseService {
 
   async dislikeVideo(userId, videoId) {
     const user = await this.find(userId)
+    if (!user) {
+      throw new Error('User could not be found.')
+    }
     const video = await videoService.find(videoId)
+    if (!video) {
+      throw new Error('Video could not be found.')
+    }
     const uid = user._id
     const vid = video._id
     const hasDisliked = await videoService.model.exists({
