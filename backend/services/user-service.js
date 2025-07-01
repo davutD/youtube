@@ -9,7 +9,7 @@ class UserService extends BaseService {
     return this.findBy('name', name)
   }
 
-  async createVideo(userId, videoDetails) {
+  async uploadVideo(userId, videoDetails) {
     const user = await this.find(userId)
     if (!user) {
       throw new Error('User could not be found.')

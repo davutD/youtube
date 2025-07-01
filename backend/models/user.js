@@ -45,25 +45,3 @@ const UserSchema = new Schema(
 UserSchema.plugin(autopopulate)
 
 module.exports = mongoose.model('User', UserSchema)
-
-// class User {
-//   constructor(
-//     id = uuidv4(),
-//     name,
-//     surname,
-//     email,
-//     videos = [],
-//     subscribers = []
-//   ) {
-//     this.id = id
-//     this.name = name
-//     this.surname = surname
-//     this.email = email
-//     this.videos = videos
-//     this.subscribers = subscribers
-//   }
-//   makeComment(video, comment) {
-//     video.comments.push({ email: this.email, comment: comment })
-//   }
-
-// module.exports = User
