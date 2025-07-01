@@ -9,6 +9,18 @@ class UserService extends BaseService {
     return this.findBy('name', name)
   }
 
+  async login(email, password) {
+    const user = await this.model.findOne({ email }).select('+password')
+    if (!user) {
+      throw new Error('Invalid credentials.')
+    }
+    const isMatch = await user.comparePassword(password)
+    if (!isMatch) {
+      throw new Error('Invalid credentials.')
+    }
+    return this.find(user._id)
+  }
+
   async uploadVideo(userId, videoDetails) {
     const user = await this.find(userId)
     if (!user) {

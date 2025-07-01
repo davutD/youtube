@@ -19,6 +19,16 @@ router.get('/:userId', async (req, res, next) => {
   }
 })
 
+router.post('/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body
+    const user = await userService.login(email, password)
+    res.send(user)
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.post('/', async (req, res, next) => {
   try {
     const newUser = await userService.insert(req.body)
