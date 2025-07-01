@@ -29,6 +29,17 @@ const UserSchema = new Schema(
       minLength: [2, 'Email must be at least 2 characters'],
       maxLength: [50, 'Email cannot exceed 50 characters'],
     },
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+      minLength: [8, 'Password must be at least 8 characters'],
+      match: [
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        'Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.',
+      ],
+      // `select: false` ensures the password hash is NOT returned in queries by default.
+      select: false,
+    },
     subscribers: [
       {
         type: Schema.Types.ObjectId,
