@@ -31,7 +31,7 @@ router.post('/login', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const newUser = await userService.insert(req.body)
+    const newUser = await userService.createUser(req.body)
     res.status(201).send(newUser)
   } catch (err) {
     next(err)

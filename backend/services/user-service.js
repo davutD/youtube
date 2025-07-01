@@ -21,6 +21,14 @@ class UserService extends BaseService {
     return this.find(user._id)
   }
 
+  async createUser(userData) {
+    const user = await this.model.findOne({ email: userData.email })
+    if (user) {
+      throw new Error('A user with this email address already exists.')
+    }
+    return this.model.create(userData)
+  }
+
   async uploadVideo(userId, videoDetails) {
     const user = await this.find(userId)
     if (!user) {
