@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const authRouter = require('./routes/auth')
@@ -20,6 +21,7 @@ app.use('/', indexRouter)
 
 app.use(errorHandler)
 
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
   console.log('Server is listening port 3000')
 })

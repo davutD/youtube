@@ -57,7 +57,8 @@ const UserSchema = new Schema(
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next()
   try {
-    const salt = await bcrypt.genSalt((saltRounds = 10))
+    const saltRounds = +process.env.BCRYPT_SALT_ROUNDS || 10
+    const salt = await bcrypt.genSalt(saltRounds)
     this.password = await bcrypt.hash(this.password, salt)
 
     next()
