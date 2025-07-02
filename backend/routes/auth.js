@@ -20,7 +20,7 @@ router.post('/register', async (req, res, next) => {
   }
 })
 
-router.post('/logout', (req, res, next) => {
+router.post('/logout', authHandler, (req, res, next) => {
   req.session.destroy((err) => {
     if (err) {
       return next(err)
