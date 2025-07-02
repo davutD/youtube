@@ -6,7 +6,6 @@ const videosRouter = require('./routes/videos')
 const commentsRouter = require('./routes/comments')
 const indexRouter = require('./routes/index')
 const errorHandler = require('./middleware/error-handler')
-const authHandler = require('./middleware/auth-handler')
 const sessionMiddleware = require('./middleware/session')
 require('./mongo-connection')
 

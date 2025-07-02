@@ -6,11 +6,11 @@ class AuthService extends BaseService {
     const { email, password } = req.body
     const user = await this.model.findOne({ email }).select('+password')
     if (!user) {
-      throw Object.assign(new Error('Invalid credentials.'), { status: 401 })
+      throw new Error('Invalid credentials.')
     }
     const isMatch = await user.comparePassword(password)
     if (!isMatch) {
-      throw Object.assign(new Error('Invalid credentials.'), { status: 401 })
+      throw new Error('Invalid credentials.')
     }
     const userSessionData = {
       _id: user._id,
@@ -26,10 +26,7 @@ class AuthService extends BaseService {
     const userData = req.body
     const user = await this.model.findOne({ email: userData.email })
     if (user) {
-      throw Object.assign(
-        new Error('A user with this email address already exists.'),
-        { status: 409 }
-      )
+      throw new Error('A user with this email address already exists.')
     }
     const newUser = await this.model.create(userData)
     const userSessionData = {
