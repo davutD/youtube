@@ -1,31 +1,42 @@
-import { ref, computed } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useMainStore = defineStore('main', () => {
+  // General UI state can remain a ref
   const isSidebarOpen = ref(true)
-  const videos = ref([])
-  const selectedVideo = ref(null)
-  const isLoading = ref(false)
-  const error = ref(null)
+
+  // Bundled state for the video list
+  const videoState = reactive({
+    data: [],
+    isLoading: false,
+    error: null,
+  })
+
+  // Bundled state for a single selected video
+  const selectedVideoState = reactive({
+    data: null,
+    isLoading: false,
+    error: null,
+  })
 
   // --- Getters ---
-  // Getters would be defined here using computed().
-  //   const videoCount = computed(() => videos.value.length)
-  //   const isReady = computed(() => !isLoading.value && error.value === null)
+  // Getters now access properties of the reactive objects.
+  //   const videoCount = computed(() => videoState.data.length)
+  //   const isReady = computed(() => !videoState.isLoading && videoState.error === null)
 
   // --- Actions ---
-  // Actions would be defined here as functions.
+  // Actions now mutate properties of the reactive objects.
   //   function toggleSidebar() {
   //     isSidebarOpen.value = !isSidebarOpen.value
   //   }
 
   //   function selectVideo(video) {
-  //     selectedVideo.value = video
+  //     selectedVideoState.data = video
   //   }
 
   //   async function fetchVideos() {
-  //     isLoading.value = true
-  //     error.value = null
+  //     videoState.isLoading = true
+  //     videoState.error = null
   //     try {
   //       // Simulate an API call
   //       await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -36,22 +47,26 @@ export const useMainStore = defineStore('main', () => {
   //         { id: 'v3', title: 'PrimeVue Still Rocks!' },
   //       ]
 
-  //       videos.value = mockVideos
+  //       videoState.data = mockVideos
   //     } catch (e) {
-  //       error.value = 'Failed to fetch videos.'
-  //       videos.value = []
+  //       videoState.error = 'Failed to fetch videos.'
+  //       videoState.data = []
   //     } finally {
-  //       isLoading.value = false
+  //       videoState.isLoading = false
   //     }
   //   }
 
   //   function reset() {
-  //     // In a setup store, you manually reset each state property
+  //     // Reset refs and properties of reactive objects
   //     isSidebarOpen.value = true
-  //     videos.value = []
-  //     selectedVideo.value = null
-  //     isLoading.value = false
-  //     error.value = null
+  //
+  //     videoState.data = []
+  //     videoState.isLoading = false
+  //     videoState.error = null
+  //
+  //     selectedVideoState.data = null
+  //     selectedVideoState.isLoading = false
+  //     selectedVideoState.error = null
   //   }
 
   // --------------------------------------------------
@@ -59,15 +74,11 @@ export const useMainStore = defineStore('main', () => {
   // You must explicitly return all state, getters, and
   // actions you want to expose.
   // --------------------------------------------------
-  // All state, getters, and actions that should be accessible
-  // from outside the store must be returned here.
   return {
     // State
     isSidebarOpen,
-    videos,
-    selectedVideo,
-    isLoading,
-    error,
+    videoState,
+    selectedVideoState,
     // Getters
     // videoCount,
     // isReady,
