@@ -1,18 +1,18 @@
 <script setup>
 import { useMainStore } from '@/stores/store'
-import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
-import Avatar from 'primevue/avatar'
 import logoUrl from '@/assets/youtube_logo.png'
+import Button from '@/components/common/Button.vue'
+import IconButton from '@/components/common/IconButton.vue'
+import AvatarButton from '@/components/common/AvatarButton.vue'
 
-// Get the store to call the action for toggling the sidebar
 const mainStore = useMainStore()
 </script>
 
 <template>
   <header class="app-header">
     <div class="header-section left">
-      <Button icon="pi pi-bars" text rounded @click="mainStore.toggleLeftSidebar" />
+      <IconButton icon="pi pi-bars" @click="mainStore.toggleLeftSidebar" />
       <router-link to="/">
         <img :src="logoUrl" alt="Logo" class="logo" />
       </router-link>
@@ -21,36 +21,30 @@ const mainStore = useMainStore()
     <div class="header-section center">
       <div class="p-inputgroup">
         <InputText placeholder="Search" />
-        <Button icon="pi pi-search" />
+        <Button icon="pi pi-search" label="search" />
       </div>
     </div>
 
     <div class="header-section right">
-      <Button icon="pi pi-video" text rounded />
-      <Button icon="pi pi-bell" text rounded />
-      <Avatar image="https://i.pravatar.cc/40" shape="circle" />
+      <IconButton icon="pi pi-video" />
+      <IconButton icon="pi pi-bell" />
+      <AvatarButton image="https://i.pravatar.cc/40" />
     </div>
   </header>
 </template>
 
 <style scoped>
 .app-header {
-  /* Positioning */
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-
-  /* Layout */
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  /* Appearance */
-  height: 56px;
-  padding: 0 24px;
-  /* background-color: #212121; */
+  height: 6.5rem;
+  padding: 0 2.5px;
   border-bottom: 1px solid #383838;
 }
 
@@ -58,22 +52,27 @@ const mainStore = useMainStore()
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  border: 1px solid #383838;
 }
 
 .header-section.left {
   justify-content: flex-start;
   gap: 16px;
+  width: 15%;
+  padding: 0 25px;
 }
 
 .header-section.center {
-  flex-grow: 1;
   justify-content: center;
-  padding: 0 24px;
+  width: 60%;
+  padding: 0 25px;
 }
 
 .header-section.right {
   justify-content: flex-end;
-  gap: 8px;
+  gap: 16px;
+  width: 15%;
+  padding: 0 25px;
 }
 
 .logo {
@@ -82,7 +81,6 @@ const mainStore = useMainStore()
 }
 
 .p-inputgroup {
-  max-width: 600px;
-  width: 100%;
+  max-width: 60rem;
 }
 </style>

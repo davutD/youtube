@@ -8,5 +8,5 @@ defineProps({
 </script>
 
 <template>
-  <Button :label="label" :icon="icon" v-bind="$attrs" />
+  <Button :label="label" :icon="icon" class="p-button-text" v-bind="$attrs" />
 </template>
