@@ -31,6 +31,7 @@ import Button from '@/components/common/Button.vue'
   z-index: 999;
   padding: 0 1rem;
   border-right: 1px solid #383838;
+  background-color: #fff;
 }
 
 ul {
