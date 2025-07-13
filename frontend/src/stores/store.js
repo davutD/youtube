@@ -2,8 +2,10 @@ import { ref, reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useMainStore = defineStore('main', () => {
-  // General UI state can remain a ref
-  const isSidebarOpen = ref(true)
+  const isSidebarOpen = ref(false)
+  function toggleLeftSidebar() {
+    isSidebarOpen.value = !isSidebarOpen.value
+  }
 
   // Bundled state for the video list
   const videoState = reactive({
@@ -26,10 +28,6 @@ export const useMainStore = defineStore('main', () => {
 
   // --- Actions ---
   // Actions now mutate properties of the reactive objects.
-  //   function toggleSidebar() {
-  //     isSidebarOpen.value = !isSidebarOpen.value
-  //   }
-
   //   function selectVideo(video) {
   //     selectedVideoState.data = video
   //   }
@@ -75,8 +73,8 @@ export const useMainStore = defineStore('main', () => {
   // actions you want to expose.
   // --------------------------------------------------
   return {
-    // State
     isSidebarOpen,
+    toggleLeftSidebar,
     videoState,
     selectedVideoState,
     // Getters

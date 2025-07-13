@@ -10,13 +10,13 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      meta: { showNarrowSidebar: true },
+      meta: { showSidebar: true },
     },
     {
       path: '/search',
       name: 'search',
       component: SearchView,
-      meta: { showNarrowSidebar: true },
+      meta: { showSidebar: true },
     },
     {
       path: '/video/:id',

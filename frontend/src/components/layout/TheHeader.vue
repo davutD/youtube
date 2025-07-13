@@ -8,12 +8,16 @@ import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 
 const mainStore = useMainStore()
+
+const toggleLeftSidebar = () => {
+  mainStore.toggleLeftSidebar()
+}
 </script>
 
 <template>
   <header class="app-header">
     <div class="header-section left">
-      <IconButton icon="pi pi-bars" @click="mainStore.toggleLeftSidebar" />
+      <IconButton icon="pi pi-bars" @click="toggleLeftSidebar" />
       <router-link to="/">
         <img :src="logoUrl" alt="Logo" class="logo" />
       </router-link>
@@ -23,7 +27,7 @@ const mainStore = useMainStore()
       <InputGroup class="yt-inputgroup">
         <InputText placeholder="Search" />
         <InputGroupAddon>
-          <IconButton icon="pi pi-search" :rounded="false" @click="toggle" />
+          <IconButton icon="pi pi-search" :rounded="false" />
         </InputGroupAddon>
       </InputGroup>
     </div>
