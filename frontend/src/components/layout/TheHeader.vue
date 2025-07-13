@@ -2,9 +2,10 @@
 import { useMainStore } from '@/stores/store'
 import InputText from 'primevue/inputtext'
 import logoUrl from '@/assets/youtube_logo.png'
-import Button from '@/components/common/Button.vue'
 import IconButton from '@/components/common/IconButton.vue'
 import AvatarButton from '@/components/common/AvatarButton.vue'
+import InputGroup from 'primevue/inputgroup'
+import InputGroupAddon from 'primevue/inputgroupaddon'
 
 const mainStore = useMainStore()
 </script>
@@ -19,10 +20,12 @@ const mainStore = useMainStore()
     </div>
 
     <div class="header-section center">
-      <div class="p-inputgroup">
+      <InputGroup class="yt-inputgroup">
         <InputText placeholder="Search" />
-        <Button icon="pi pi-search" label="search" />
-      </div>
+        <InputGroupAddon>
+          <IconButton icon="pi pi-search" :rounded="false" @click="toggle" />
+        </InputGroupAddon>
+      </InputGroup>
     </div>
 
     <div class="header-section right">
@@ -44,7 +47,7 @@ const mainStore = useMainStore()
   align-items: center;
   justify-content: space-between;
   height: 6.5rem;
-  padding: 0 2.5px;
+  padding: 0 1rem;
   border-bottom: 1px solid #383838;
 }
 
@@ -52,35 +55,35 @@ const mainStore = useMainStore()
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  border: 1px solid #383838;
 }
 
 .header-section.left {
   justify-content: flex-start;
-  gap: 16px;
+  gap: 1.5rem;
   width: 15%;
-  padding: 0 25px;
+  padding: 0 2rem;
 }
 
 .header-section.center {
   justify-content: center;
   width: 60%;
-  padding: 0 25px;
+  padding: 0 2rem;
 }
 
 .header-section.right {
   justify-content: flex-end;
-  gap: 16px;
+  gap: 1rem;
   width: 15%;
-  padding: 0 25px;
+  padding: 0 2rem;
 }
 
 .logo {
-  height: 25px;
+  height: 1.5rem;
   display: block;
 }
 
-.p-inputgroup {
-  max-width: 60rem;
+.yt-inputgroup {
+  width: 100%;
+  max-width: 40rem;
 }
 </style>

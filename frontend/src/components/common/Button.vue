@@ -1,12 +1,12 @@
 <script setup>
-import Button from 'primevue/button'
+import PrimeButton from 'primevue/button'
 
-defineProps({
+const props = defineProps({
   label: String,
   icon: String,
 })
 </script>
 
 <template>
-  <Button :label="label" :icon="icon" class="p-button-text" v-bind="$attrs" />
+  <PrimeButton :label="label" :icon="icon" v-bind="$attrs" />
 </template>

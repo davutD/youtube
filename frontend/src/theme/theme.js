@@ -1,29 +1,40 @@
+import { definePreset } from '@primeuix/themes'
 import Aura from '@primeuix/themes/aura'
-import { definePreset } from '@primevue/themes'
 
-// Create a new preset by extending the base Aura preset
-export const Theme = definePreset(Aura, {
-  // We are only overriding semantic tokens in this case
+export default definePreset(Aura, {
+  primitive: {
+    'yt-red': '#ff0033',
+    'yt-blue': '#1E3A8A',
+    'yt-gray-lg': '#9ea1a7ff',
+    'yt-gray-md': '#6B7280',
+    'yt-gray-dk': '#4B5563',
+    'yt-black': '#030303',
+  },
   semantic: {
-    // This is the variable that controls the background color on hover
-    // for components like buttons, list items, etc.
-    // By setting its value to 'transparent', we remove the effect completely.
-    surface: {
-      hover: {
-        // For light mode
-        value: 'transparent',
-      },
-    },
-
-    // You can also override the text color here if needed,
-    // though setting it to black might be better in main.css
-    // to avoid theme compilation complexities for a simple change.
     text: {
-      color: {
-        value: '#000000', // Example: setting default text to black
+      color: '{yt-black}',
+      secondary: '{yt-gray}',
+    },
+    colorScheme: {
+      light: {
+        formField: { hoverBorderColor: '{yt-blue}' },
       },
+      dark: { formField: { hoverBorderColor: '{yt-blue}' } },
     },
   },
+  // components: {
+  //   button: {
+  //     background: '{yt-gray-md}',
+  //     background: '{yt-red}',
+  //     hoverBackground: '{yt-gray-dk}',
+  //   },
+  //   inputtext: {
+  //     focusBorderColor: '{yt-red}',
+  //     focusBorder: '{yt-red}',
+  //   },
+  // },
+  options: {
+    prefix: 'yt',
+    darkModeSelector: '[data-theme="dark"]',
+  },
 })
-
-export default Theme
