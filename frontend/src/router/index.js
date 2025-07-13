@@ -10,14 +10,15 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+      meta: { showNarrowSidebar: true },
     },
     {
       path: '/search',
       name: 'search',
       component: SearchView,
+      meta: { showNarrowSidebar: true },
     },
     {
-      // Example: /video/v123
       path: '/video/:id',
       name: 'video-detail',
       component: VideoDetailView,
