@@ -3,34 +3,41 @@ import Button from '@/components/common/Button.vue'
 </script>
 
 <template>
-  <nav class="wider-nav">
-    <ul>
-      <li><Button icon="pi pi-home" label="Home" text class="nav-item" /></li>
-      <li><Button icon="pi pi-bolt" label="Shorts" text class="nav-item" /></li>
-      <li><Button icon="pi pi-list" label="Subscriptions" text class="nav-item" /></li>
-      <hr class="separator" />
-      <li><Button icon="pi pi-user" label="Your channel" text class="nav-item" /></li>
-      <li><Button icon="pi pi-history" label="History" text class="nav-item" /></li>
-    </ul>
-  </nav>
+  <aside class="wider-sidebar">
+    <nav>
+      <ul>
+        <li><Button icon="pi pi-home" label="Home" text class="nav-item" /></li>
+        <li><Button icon="pi pi-bolt" label="Shorts" text class="nav-item" /></li>
+        <li><Button icon="pi pi-list" label="Subscriptions" text class="nav-item" /></li>
+        <hr />
+        <li>
+          <Button icon="pi pi-chevron-right" label="You" text class="nav-item" iconPos="right" />
+        </li>
+        <li><Button icon="pi pi-history" label="History" text class="nav-item" /></li>
+        <li><Button icon="pi pi-list-check" label="Oynatma Listeleri" text class="nav-item" /></li>
+        <li><Button icon="pi pi-youtube" label="Videos" text class="nav-item" /></li>
+        <li><Button icon="pi pi-clock" label="Watch Later" text class="nav-item" /></li>
+        <li><Button icon="pi pi-thumbs-up" label="Favorites" text class="nav-item" /></li>
+        <hr />
+        <h4>Subscriptions</h4>
+      </ul>
+    </nav>
+  </aside>
 </template>
 
 <style scoped>
-.wider-nav {
-  padding: 1rem;
+.wider-sidebar {
+  position: fixed;
+  top: 6.5rem;
+  height: calc(100vh - 6.5rem);
+  z-index: 999;
+  padding: 0 0.5rem;
+  border-right: 1px solid #383838;
 }
-
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.separator {
-  margin: 0.75rem 0;
-  border-color: #383838;
-  border-style: solid;
-  border-width: 1px 0 0 0;
 }
 
 :deep(.nav-item) {
@@ -41,7 +48,7 @@ ul {
 }
 
 :deep(.nav-item .p-button-icon) {
-  margin-right: 1.5rem;
+  margin-right: 1rem;
   font-size: 1.25rem;
 }
 
