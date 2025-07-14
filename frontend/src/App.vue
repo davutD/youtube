@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/stores/store'
-import TheSidebar from './components/layout/TheSidebar.vue'
+import TheSidebar from './components/layout/sidebar/TheSidebar.vue'
 import TheHeader from './components/layout/TheHeader.vue'
 
 const route = useRoute()
