@@ -80,12 +80,20 @@ const recommendedVideosData = ref([
 <style scoped>
 .video-detail-layout {
   display: grid;
-  grid-template-columns: 1fr 350px;
+  grid-template-columns: 3fr 1fr;
   gap: 1.5rem;
+  padding: 0 1.5rem;
+  top: 0;
+  border: 1px solid #08f90c;
 }
 
 .main-content {
   display: flex;
   flex-direction: column;
+  border: 1px solid #e50b0b;
+}
+
+.recommended-sidebar {
+  border: 1px solid #0b5be5;
 }
 </style>
