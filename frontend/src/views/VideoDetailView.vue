@@ -84,16 +84,13 @@ const recommendedVideosData = ref([
   gap: 1.5rem;
   padding: 0 1.5rem;
   top: 0;
-  border: 1px solid #08f90c;
 }
 
 .main-content {
   display: flex;
   flex-direction: column;
-  border: 1px solid #e50b0b;
 }
 
 .recommended-sidebar {
-  border: 1px solid #0b5be5;
 }
 </style>

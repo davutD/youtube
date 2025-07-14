@@ -18,6 +18,6 @@ defineProps({
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 0.75rem;
+  border-radius: 1rem;
 }
 </style>
