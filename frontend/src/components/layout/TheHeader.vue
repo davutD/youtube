@@ -1,12 +1,12 @@
 <script setup>
+import { ref } from 'vue'
 import { useMainStore } from '@/stores/store'
 import InputText from 'primevue/inputtext'
 import logoUrl from '@/assets/youtube_logo.png'
-import Button from '@/components/common/Button.vue'
 import IconButton from '@/components/common/IconButton.vue'
-import Dialog from 'primevue/dialog'
 import SplitButton from 'primevue/splitbutton'
 import AvatarButton from '@/components/common/AvatarButton.vue'
+import VideoUploadDialog from '@/components/video/VideoUploadDialog.vue'
 import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 
@@ -62,6 +62,7 @@ const items = [
       <IconButton icon="pi pi-bell" />
       <AvatarButton image="https://i.pravatar.cc/40" class="yt-avatar" />
     </div>
+    <VideoUploadDialog :visible="showUploadDialog" />
   </header>
 </template>
 
