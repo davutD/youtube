@@ -25,13 +25,12 @@ import Button from '@/components/common/Button.vue'
 
 <style scoped>
 .narrow-sidebar {
-  position: sticky;
-  flex: 0 0 5rem;
-  top: 0;
+  position: fixed;
+  top: 6.5rem;
+  left: 0;
   height: calc(100vh - 6.5rem);
-  /* z-index: 999; */
-  padding: 0 1rem;
-  border: 1px solid #383838;
+  width: auto;
+  padding: 0 1.5rem;
   background-color: #fff;
 }
 
