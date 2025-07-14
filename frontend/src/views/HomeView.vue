@@ -2,8 +2,6 @@
 import { ref } from 'vue'
 import VideoCard from '@/components/video/VideoCard.vue'
 
-// For demonstration, we'll use a mock array of video data.
-// In a real app, this would come from an API call.
 const videos = ref([
   {
     id: 1,
@@ -97,20 +95,18 @@ const videos = ref([
 
 <style scoped>
 .video-grid {
+  padding: 2rem;
   display: grid;
-  /* Create 3 equal-width columns */
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem; /* Space between cards */
+  gap: 1.5rem;
 }
 
-/* On medium screens, switch to 2 columns */
 @media (max-width: 1200px) {
   .video-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* On small screens, switch to a single column */
 @media (max-width: 768px) {
   .video-grid {
     grid-template-columns: 1fr;

@@ -27,12 +27,14 @@ import Button from '@/components/common/Button.vue'
 
 <style scoped>
 .wider-sidebar {
-  position: fixed;
-  top: 6.5rem;
+  position: sticky;
+  top: 0;
+  width: auto;
+  flex: 0 0 auto;
   height: calc(100vh - 6.5rem);
-  z-index: 999;
+  /* z-index: 999; */
   padding: 0 0.5rem;
-  border-right: 1px solid #383838;
+  border: 1px solid #383838;
   background-color: #fff;
 }
 ul {

@@ -13,7 +13,7 @@ defineProps({
     <div class="details">
       <img :src="video.channelAvatarUrl" alt="Channel avatar" class="channel-avatar" />
       <div class="meta">
-        <h3 class="title">{{ video.title }}</h3>
+        <h4 class="title">{{ video.title }}</h4>
         <p class="channel-name">{{ video.channelName }}</p>
         <p class="stats">{{ video.views }} &bull; {{ video.uploadDate }}</p>
       </div>
@@ -43,8 +43,8 @@ defineProps({
 }
 
 .channel-avatar {
-  width: 36px;
-  height: 36px;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
   background-color: #282828;
 }
@@ -55,16 +55,13 @@ defineProps({
 }
 
 .title {
-  font-size: 1rem;
   font-weight: 500;
   margin: 0 0 0.25rem 0;
-  color: #f1f1f1;
 }
 
 .channel-name,
 .stats {
-  font-size: 0.8rem;
-  color: #aaa;
+  font-size: 0.9rem;
   margin: 0;
 }
 </style>

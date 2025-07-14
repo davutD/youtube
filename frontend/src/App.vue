@@ -21,13 +21,15 @@ const route = useRoute()
 <style scoped>
 .main-container {
   display: flex;
-  padding-top: 6.5rem;
+  margin-top: 6.5rem;
+  /* padding-top: 6.5rem; */
+  border: 1px solid #d60f0f;
 }
 
 .main-content {
-  flex-grow: 1;
+  flex: 1;
+  overflow: auto;
   padding: 1.5rem;
-  padding-left: v-bind(mainContentPadding);
-  transition: padding-left 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 </style>
