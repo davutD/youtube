@@ -62,14 +62,7 @@ const videos = ref([
 
 <template>
   <div class="video-grid">
-    <router-link
-      v-for="video in videos"
-      :key="video.id"
-      :to="'/video/' + video.id"
-      class="video-link"
-    >
-      <VideoCard :video="video" />
-    </router-link>
+    <VideoCard v-for="video in videos" :key="video.id" :video="video" />
   </div>
 </template>
 

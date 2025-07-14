@@ -9,7 +9,9 @@ defineProps({
 
 <template>
   <div class="video-card">
-    <img :src="video.thumbnailUrl" alt="Video thumbnail" class="thumbnail" />
+    <router-link :to="'/video/' + video.id">
+      <img :src="video.thumbnailUrl" alt="Video thumbnail" class="thumbnail" />
+    </router-link>
     <div class="details">
       <img :src="video.channelAvatarUrl" alt="Channel avatar" class="channel-avatar" />
       <div class="meta">
