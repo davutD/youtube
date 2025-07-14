@@ -37,7 +37,7 @@ defineProps({
   border-radius: 50%;
 }
 .description-box {
-  background-color: #272727;
+  background-color: #dfdddd;
   border-radius: 0.75rem;
   padding: 1rem;
   margin-top: 1rem;
