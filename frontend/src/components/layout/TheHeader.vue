@@ -2,16 +2,35 @@
 import { useMainStore } from '@/stores/store'
 import InputText from 'primevue/inputtext'
 import logoUrl from '@/assets/youtube_logo.png'
+import Button from '@/components/common/Button.vue'
 import IconButton from '@/components/common/IconButton.vue'
+import Dialog from 'primevue/dialog'
+import SplitButton from 'primevue/splitbutton'
 import AvatarButton from '@/components/common/AvatarButton.vue'
 import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 
 const mainStore = useMainStore()
+const showUploadDialog = ref(false)
 
 const toggleLeftSidebar = () => {
   mainStore.toggleLeftSidebar()
 }
+
+const items = [
+  {
+    label: 'Upload Video',
+    icon: 'pi pi-plus',
+    command: () => {
+      showUploadDialog.value = true
+    },
+  },
+  {
+    label: 'Go Live',
+    icon: 'pi pi-video',
+    command: () => {},
+  },
+]
 </script>
 
 <template>
@@ -33,9 +52,15 @@ const toggleLeftSidebar = () => {
     </div>
 
     <div class="header-section right">
-      <IconButton icon="pi pi-video" />
+      <SplitButton
+        dropdownIcon="pi pi-plus"
+        label="Create"
+        :model="items"
+        rounded
+        severity="secondary"
+      />
       <IconButton icon="pi pi-bell" />
-      <AvatarButton image="https://i.pravatar.cc/40" />
+      <AvatarButton image="https://i.pravatar.cc/40" class="yt-avatar" />
     </div>
   </header>
 </template>
@@ -78,7 +103,7 @@ const toggleLeftSidebar = () => {
   justify-content: flex-end;
   gap: 1rem;
   width: 15%;
-  padding: 0 2rem;
+  padding: 0 1rem;
 }
 
 .logo {
@@ -89,5 +114,10 @@ const toggleLeftSidebar = () => {
 .yt-inputgroup {
   width: 100%;
   max-width: 40rem;
+}
+
+.yt-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 </style>
