@@ -52,7 +52,6 @@ const toggleLeftSidebar = () => {
   justify-content: space-between;
   height: 6.5rem;
   padding: 0 1rem;
-  border-bottom: 1px solid #383838;
   background-color: #fff;
 }
 

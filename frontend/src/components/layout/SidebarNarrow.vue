@@ -27,7 +27,7 @@ import Button from '@/components/common/Button.vue'
 .narrow-sidebar {
   position: fixed;
   top: 6.5rem;
-  left: 0;
+  left: 0.25rem;
   height: calc(100vh - 6.5rem);
   width: auto;
   padding: 0 1.5rem;

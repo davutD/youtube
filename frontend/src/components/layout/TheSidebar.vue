@@ -1,6 +1,5 @@
 <script setup>
 import { useMainStore } from '@/stores/store'
-import Drawer from 'primevue/drawer'
 import SidebarNarrow from './SidebarNarrow.vue'
 import SidebarWider from './SidebarWider.vue'
 
