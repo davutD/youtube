@@ -37,9 +37,7 @@ router.post(
     try {
       const { userId } = req.params
       const { filename } = req.body
-
       const result = await userService.initiateVideoUpload(userId, filename)
-
       res.send(result)
     } catch (err) {
       next(err)
@@ -53,9 +51,7 @@ router.post(
   async (req, res, next) => {
     try {
       const { userId } = req.params
-
       const video = await userService.finalizeVideoUpload(userId, req.body)
-
       res.status(201).send(video)
     } catch (err) {
       next(err)
