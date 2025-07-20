@@ -20,15 +20,48 @@ router.get('/:userId', async (req, res, next) => {
   }
 })
 
-router.post('/:userId/videos', authHandler, async (req, res, next) => {
-  try {
-    const userId = req.params.userId
-    const video = await userService.uploadVideo(userId, req.body)
-    res.status(201).send(video)
-  } catch (err) {
-    next(err)
+// router.post('/:userId/videos', authHandler, async (req, res, next) => {
+//   try {
+//     const userId = req.params.userId
+//     const video = await userService.uploadVideo(userId, req.body)
+//     res.status(201).send(video)
+//   } catch (err) {
+//     next(err)
+//   }
+// })
+
+router.post(
+  '/:userId/videos/initiate-upload',
+  authHandler,
+  async (req, res, next) => {
+    try {
+      const { userId } = req.params
+      const { filename } = req.body
+
+      const result = await userService.initiateVideoUpload(userId, filename)
+
+      res.send(result)
+    } catch (err) {
+      next(err)
+    }
   }
-})
+)
+
+router.post(
+  '/:userId/videos/finalize-upload',
+  authHandler,
+  async (req, res, next) => {
+    try {
+      const { userId } = req.params
+
+      const video = await userService.finalizeVideoUpload(userId, req.body)
+
+      res.status(201).send(video)
+    } catch (err) {
+      next(err)
+    }
+  }
+)
 
 router.patch('/:userId', authHandler, async (req, res, next) => {
   try {
