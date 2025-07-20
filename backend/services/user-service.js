@@ -8,19 +8,51 @@ class UserService extends BaseService {
     return this.findBy('name', name)
   }
 
-  async uploadVideo(userId, videoDetails) {
+  // async uploadVideo(userId, videoDetails) {
+  //   const user = await this.find(userId)
+  //   if (!user) {
+  //     throw new Error('User could not be found.')
+  //   }
+  //   const video = await videoService.insert({
+  //     creator: user._id,
+  //     ...videoDetails,
+  //   })
+  //   if (!video) {
+  //     throw new Error('Video could not be created.')
+  //   }
+  //   await video.save()
+  //   return video
+  // }
+
+  async initiateVideoUpload(userId, filename) {
+    if (!filename) {
+      throw new Error('Filename is required.')
+    }
+    const key = `videos/${userId}/${uuidv4()}-${filename}`
+    const uploadUrl = await cloudStorageService.generateUploadUrl(key)
+    return {
+      uploadUrl,
+      key,
+    }
+  }
+
+  async finalizeVideoUpload(userId, videoDetails) {
     const user = await this.find(userId)
     if (!user) {
       throw new Error('User could not be found.')
     }
-    const video = await videoService.insert({
+    const videoData = {
       creator: user._id,
-      ...videoDetails,
-    })
-    if (!video) {
-      throw new Error('Video could not be created.')
+      title: videoDetails.title,
+      description: videoDetails.description,
+      storageObjectKey: videoDetails.key,
+      status: 'PROCESSING',
     }
-    await video.save()
+    const video = await videoService.insert(videoData)
+    if (!video) {
+      throw new Error('Video record could not be created.')
+    }
+    // In a production app, you would trigger the video transcoding job here.
     return video
   }
 
