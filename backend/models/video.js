@@ -25,12 +25,24 @@ const VideoSchema = new Schema(
       minLength: [2, 'Description must be at least 2 character'],
       maxLength: [5000, 'Description cannot exceed 5000 character'],
     },
-    videoUrl: {
+    playbackUrl: {
+      type: String,
+      trim: true,
+    },
+    thumbnailUrl: {
+      type: String,
+      trim: true,
+    },
+    storageObjectKey: {
       type: String,
       required: true,
       trim: true,
-      minLength: [2, 'Video Url must be at least 2 character'],
-      maxLength: [3000, 'Video Url cannot exceed 3000 character'],
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ['PROCESSING', 'READY', 'FAILED'],
+      default: 'PROCESSING',
     },
     tags: [],
     likeCount: Number,
