@@ -2,6 +2,7 @@ const BaseService = require('./base-service')
 const videoService = require('./video-service')
 const commentService = require('./comment-service')
 const cloudStorageService = require('./cloud-storage-service')
+const videoTranscodingService = require('./video-transcoding-service')
 const User = require('../models/user')
 const { v4: uuidv4 } = require('uuid')
 
@@ -39,6 +40,10 @@ class UserService extends BaseService {
       throw new Error('Video record could not be created.')
     }
     // In a production app, you would trigger the video transcoding job here.
+    videoTranscodingService.startProcessing(
+      video._id.toString(),
+      video.storageObjectKey
+    )
     return video
   }
 
