@@ -34,6 +34,16 @@ class VideoService extends BaseService {
     await commentService.deleteCommentsByVideoId(videoId)
     return await this.model.findOneAndDelete({ _id: videoId, creator: userId })
   }
+
+  async finalizeVideoProcessing(videoId, processingResult) {
+    const { status, playbackUrl, thumbnailUrl } = processingResult
+    const updatedVideoData = {
+      status: status === 'COMPLETED' ? 'READY' : 'FAILED',
+      playbackUrl,
+      thumbnailUrl,
+    }
+    return this.update(videoId, updatedVideoData)
+  }
 }
 
 module.exports = new VideoService(Video)
