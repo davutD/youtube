@@ -6,6 +6,7 @@ function createCloudStorageService() {
 
   switch (provider) {
     case 'CLOUDFLARE_R2':
+      console.log('Using Cloudflare R2 for storage.')
       return new CloudflareR2Service()
     case 'AWS_S3':
       console.log('Using AWS S3 for storage.')
