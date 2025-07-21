@@ -20,16 +20,6 @@ router.get('/:userId', async (req, res, next) => {
   }
 })
 
-// router.post('/:userId/videos', authHandler, async (req, res, next) => {
-//   try {
-//     const userId = req.params.userId
-//     const video = await userService.uploadVideo(userId, req.body)
-//     res.status(201).send(video)
-//   } catch (err) {
-//     next(err)
-//   }
-// })
-
 router.post(
   '/:userId/videos/initiate-upload',
   authHandler,

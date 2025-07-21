@@ -1,28 +1,14 @@
 const BaseService = require('./base-service')
 const videoService = require('./video-service')
 const commentService = require('./comment-service')
+const cloudStorageService = require('./cloud-storage-service')
 const User = require('../models/user')
+const { v4: uuidv4 } = require('uuid')
 
 class UserService extends BaseService {
   async findByName(name) {
     return this.findBy('name', name)
   }
-
-  // async uploadVideo(userId, videoDetails) {
-  //   const user = await this.find(userId)
-  //   if (!user) {
-  //     throw new Error('User could not be found.')
-  //   }
-  //   const video = await videoService.insert({
-  //     creator: user._id,
-  //     ...videoDetails,
-  //   })
-  //   if (!video) {
-  //     throw new Error('Video could not be created.')
-  //   }
-  //   await video.save()
-  //   return video
-  // }
 
   async initiateVideoUpload(userId, filename) {
     if (!filename) {
