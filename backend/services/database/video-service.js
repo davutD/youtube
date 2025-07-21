@@ -1,6 +1,6 @@
 const BaseService = require('./base-service')
 const commentService = require('./comment-service')
-const Video = require('../models/video')
+const Video = require('../../models/video')
 
 class VideoService extends BaseService {
   async findByTitle(title) {

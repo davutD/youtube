@@ -1,9 +1,9 @@
 const BaseService = require('./base-service')
 const videoService = require('./video-service')
 const commentService = require('./comment-service')
-const cloudStorageService = require('./cloud-storage-service')
-const videoTranscodingService = require('./video-transcoding-service')
-const User = require('../models/user')
+const cloudStorageService = require('../cloud/storage/index')
+const videoTranscodingService = require('../cloud/transcoding/video-transcoding-service')
+const User = require('../../models/user')
 const { v4: uuidv4 } = require('uuid')
 
 class UserService extends BaseService {
