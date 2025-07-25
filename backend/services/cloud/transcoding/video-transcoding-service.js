@@ -15,6 +15,7 @@ class VideoTranscodingService {
    */
   async startProcessing(videoId, storageKey) {
     const s3SourceUrl = `s3://${process.env.AWS_S3_BUCKET_NAME}/${storageKey}`
+    const notificationUrl = `${process.env.API_BASE_URL}/webhooks/video-processed`
 
     try {
       await cloudinary.uploader.upload(s3SourceUrl, {
@@ -22,8 +23,7 @@ class VideoTranscodingService {
         public_id: videoId,
         upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
         eager_async: true,
-        eager_notification_url:
-          'https://your-api.com/api/webhooks/cloudinary-processed',
+        eager_notification_url: notificationUrl,
       })
       console.log(
         `Successfully started Cloudinary processing for video: ${videoId}`
