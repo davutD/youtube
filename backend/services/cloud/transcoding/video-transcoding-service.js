@@ -1,50 +1,36 @@
-const {
-  MediaConvertClient,
-  CreateJobCommand,
-} = require('@aws-sdk/client-mediaconvert')
+const cloudinary = require('cloudinary').v2
 require('dotenv').config()
 
-class VideoTranscodingService {
-  constructor() {
-    this.mediaConvert = new MediaConvertClient({
-      region: process.env.AWS_S3_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      },
-    })
-  }
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
+class VideoTranscodingService {
   /**
-   * Starts a transcoding job in AWS Elemental MediaConvert.
+   * Tells Cloudinary to fetch a video from S3 and start transcoding.
    * @param {string} videoId - The ID of our video record.
-   * @param {string} storageKey - The key of the raw file in the uploads S3 bucket.
+   * @param {string} storageKey - The key of the raw file in the S3 uploads bucket.
    */
   async startProcessing(videoId, storageKey) {
-    const sourceS3Path = `s3://${process.env.AWS_S3_UPLOADS_BUCKET_NAME}/${storageKey}`
-
-    const params = {
-      Role: process.env.AWS_MEDIACONVERT_ROLE_ARN,
-      JobTemplate: process.env.AWS_MEDIACONVERT_TEMPLATE_NAME,
-      Settings: {
-        Inputs: [
-          {
-            FileInput: sourceS3Path,
-          },
-        ],
-      },
-      UserMetadata: {
-        videoId: videoId, // Pass our videoId to the job
-      },
-    }
+    const s3SourceUrl = `s3://${process.env.AWS_S3_BUCKET_NAME}/${storageKey}`
 
     try {
-      const command = new CreateJobCommand(params)
-      await this.mediaConvert.send(command)
-      console.log(`Successfully started MediaConvert job for video: ${videoId}`)
+      await cloudinary.uploader.upload(s3SourceUrl, {
+        resource_type: 'video',
+        public_id: videoId,
+        upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
+        eager_async: true,
+        eager_notification_url:
+          'https://your-api.com/api/webhooks/cloudinary-processed',
+      })
+      console.log(
+        `Successfully started Cloudinary processing for video: ${videoId}`
+      )
     } catch (err) {
-      console.error('Error starting MediaConvert job:', err)
-      // Here you might want to update the video status to 'FAILED'
+      console.error('Error starting Cloudinary processing:', err)
+      // You could update the video status to FAILED here
     }
   }
 }
