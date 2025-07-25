@@ -9,7 +9,7 @@ router.post('/video-processed', async (req, res, next) => {
       const videoId = public_id
       const playbackUrl = eager[0].secure_url
       const thumbnailUrl = eager[0].secure_url.replace(/\.\w+$/, '.jpg')
-      await videoService.finalizeProcessing(videoId, {
+      await videoService.finalizeVideoProcessing(videoId, {
         status: 'COMPLETED',
         playbackUrl,
         thumbnailUrl,
