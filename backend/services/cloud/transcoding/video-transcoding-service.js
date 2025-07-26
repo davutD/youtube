@@ -1,36 +1,24 @@
-const cloudinary = require('cloudinary').v2
+const Mux = require('@mux/mux-node')
+const cloudStorageService = require('../storage')
 require('dotenv').config()
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-})
+const mux = new Mux(process.env.MUX_TOKEN_ID, process.env.MUX_TOKEN_SECRET)
 
 class VideoTranscodingService {
-  /**
-   * Tells Cloudinary to fetch a video from S3 and start transcoding.
-   * @param {string} videoId - The ID of our video record.
-   * @param {string} storageKey - The key of the raw file in the S3 uploads bucket.
-   */
   async startProcessing(videoId, storageKey) {
-    const s3SourceUrl = `s3://${process.env.AWS_S3_BUCKET_NAME}/${storageKey}`
-    const notificationUrl = `${process.env.API_BASE_URL}/webhooks/video-processed`
+    const s3DownloadUrl = await cloudStorageService.generateDownloadUrl(
+      storageKey
+    )
 
     try {
-      await cloudinary.uploader.upload(s3SourceUrl, {
-        resource_type: 'video',
-        public_id: videoId,
-        upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
-        eager_async: true,
-        eager_notification_url: notificationUrl,
+      await mux.video.assets.create({
+        input: s3DownloadUrl,
+        playback_policy: ['public'],
+        passthrough: videoId,
       })
-      console.log(
-        `Successfully started Cloudinary processing for video: ${videoId}`
-      )
+      console.log(`Mux processing started for ${videoId}`)
     } catch (err) {
-      console.error('Error starting Cloudinary processing:', err)
-      // You could update the video status to FAILED here
+      console.error('Mux start error:', err)
     }
   }
 }
