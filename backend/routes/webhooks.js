@@ -3,20 +3,24 @@ const { videoService } = require('../services')
 
 router.post('/video-processed', async (req, res, next) => {
   try {
-    const { public_id, eager, notification_type } = req.body
+    const { type, data } = req.body
 
-    if (notification_type === 'eager') {
-      const videoId = public_id
-      const playbackUrl = eager[0].secure_url
-      const thumbnailUrl = eager[0].secure_url.replace(/\.\w+$/, '.jpg')
+    if (type === 'video.asset.ready') {
+      const videoId = data.passthrough
+      const playbackId = data.playback_ids[0].id
+      const playbackUrl = `https://stream.mux.com/${playbackId}.m3u8`
+      const thumbnailUrl = `https://image.mux.com/${playbackId}/thumbnail.jpg`
+
       await videoService.finalizeVideoProcessing(videoId, {
         status: 'COMPLETED',
         playbackUrl,
         thumbnailUrl,
       })
+
+      console.log(`Mux webhook processed for video: ${videoId}`)
     }
 
-    res.status(200).send({ message: 'Notification received.' })
+    res.status(200).send('Notification received.')
   } catch (err) {
     next(err)
   }
