@@ -1,4 +1,8 @@
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3')
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} = require('@aws-sdk/client-s3')
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
 require('dotenv').config()
 
@@ -16,6 +20,14 @@ class AWSS3Service {
 
   async generateUploadUrl(key, expiresIn = 900) {
     const command = new PutObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+    })
+    return getSignedUrl(this.s3, command, { expiresIn })
+  }
+
+  async generateDownloadUrl(key, expiresIn = 3600) {
+    const command = new GetObjectCommand({
       Bucket: this.bucketName,
       Key: key,
     })
