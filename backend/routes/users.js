@@ -20,48 +20,37 @@ router.get('/:userId', async (req, res, next) => {
   }
 })
 
-router.post(
-  '/:userId/videos/initiate-upload',
-  authHandler,
-  async (req, res, next) => {
-    try {
-      const { userId } = req.params
-      const { filename } = req.body
-      const result = await userService.initiateVideoUpload(userId, filename)
-      res.send(result)
-    } catch (err) {
-      next(err)
-    }
-  }
-)
-
-router.post(
-  '/:userId/videos/finalize-upload',
-  authHandler,
-  async (req, res, next) => {
-    try {
-      const { userId } = req.params
-      const video = await userService.finalizeVideoUpload(userId, req.body)
-      res.status(201).send(video)
-    } catch (err) {
-      next(err)
-    }
-  }
-)
-
-router.patch('/:userId', authHandler, async (req, res, next) => {
+router.post('/videos/initiate-upload', authHandler, async (req, res, next) => {
   try {
-    const { userId } = req.params
-    const user = await userService.update(userId, req.body)
+    const { filename } = req.body
+    const result = await userService.initiateVideoUpload(req.user._id, filename)
+    res.send(result)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.post('/videos/finalize-upload', authHandler, async (req, res, next) => {
+  try {
+    const video = await userService.finalizeVideoUpload(req.user._id, req.body)
+    res.status(201).send(video)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.patch('/me', authHandler, async (req, res, next) => {
+  try {
+    const user = await userService.update(req.user._id, req.body)
     res.send(user)
   } catch (err) {
     next(err)
   }
 })
 
-router.delete('/:userId', authHandler, async (req, res, next) => {
+router.delete('/me', authHandler, async (req, res, next) => {
   try {
-    const { userId } = req.params
+    const userId = req.user._id
     await userService.deleteUser(userId)
     res.send(`User with id of ${userId} is successfully deleted.`)
   } catch (err) {
@@ -70,12 +59,15 @@ router.delete('/:userId', authHandler, async (req, res, next) => {
 })
 
 router.post(
-  '/:userId/subscribers/:subscribeId',
+  '/subscribers/:subscribeId',
   authHandler,
   async (req, res, next) => {
     try {
-      const { userId, subscribeId } = req.params
-      const userToSubscribe = await userService.subscribe(userId, subscribeId)
+      const { subscribeId } = req.params
+      const userToSubscribe = await userService.subscribe(
+        req.user._id,
+        subscribeId
+      )
       res.send(userToSubscribe)
     } catch (err) {
       next(err)
@@ -84,12 +76,12 @@ router.post(
 )
 
 router.delete(
-  '/:userId/subscribers/:subscribeId',
+  '/subscribers/:subscribeId',
   authHandler,
   async (req, res, next) => {
     try {
-      const { userId, subscribeId } = req.params
-      await userService.unsubscribe(userId, subscribeId)
+      const { subscribeId } = req.params
+      await userService.unsubscribe(req.user._id, subscribeId)
       res.send(`User with id of ${subscribeId} is successfully unsubscribed.`)
     } catch (err) {
       next(err)
@@ -97,69 +89,57 @@ router.delete(
   }
 )
 
-router.post(
-  '/:userId/likesVideo/:videoId',
-  authHandler,
-  async (req, res, next) => {
-    try {
-      const { userId, videoId } = req.params
-      const video = await userService.likeVideo(userId, videoId)
-      res.send(video)
-    } catch (err) {
-      next(err)
-    }
+router.post('/likesVideo/:videoId', authHandler, async (req, res, next) => {
+  try {
+    const { videoId } = req.params
+    const video = await userService.likeVideo(req.user._id, videoId)
+    res.send(video)
+  } catch (err) {
+    next(err)
   }
-)
+})
+
+router.delete('/likesVideo/:videoId', authHandler, async (req, res, next) => {
+  try {
+    const { videoId } = req.params
+    const video = await userService.dislikeVideo(req.user._id, videoId)
+    res.send(video)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.delete('/videos/:videoId', authHandler, async (req, res, next) => {
+  try {
+    const { videoId } = req.params
+    await userService.deleteVideo(req.user._id, videoId)
+    res.send(`Video with ${videoId} id deleted`)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.post('/video/:videoId/comments', authHandler, async (req, res, next) => {
+  try {
+    const { videoId } = req.params
+    const comment = await userService.makeComment(
+      req.user._id,
+      videoId,
+      req.body
+    )
+    res.status(201).send(comment)
+  } catch (err) {
+    next(err)
+  }
+})
 
 router.delete(
-  '/:userId/likesVideo/:videoId',
+  '/video/:videoId/comments/:commentId',
   authHandler,
   async (req, res, next) => {
     try {
-      const { userId, videoId } = req.params
-      const video = await userService.dislikeVideo(userId, videoId)
-      res.send(video)
-    } catch (err) {
-      next(err)
-    }
-  }
-)
-
-router.delete(
-  '/:userId/videos/:videoId',
-  authHandler,
-  async (req, res, next) => {
-    try {
-      const { userId, videoId } = req.params
-      await userService.deleteVideo(userId, videoId)
-      res.send(`Video with ${videoId} id deleted`)
-    } catch (err) {
-      next(err)
-    }
-  }
-)
-
-router.post(
-  '/:userId/video/:videoId/comments',
-  authHandler,
-  async (req, res, next) => {
-    try {
-      const { userId, videoId } = req.params
-      const comment = await userService.makeComment(userId, videoId, req.body)
-      res.status(201).send(comment)
-    } catch (err) {
-      next(err)
-    }
-  }
-)
-
-router.delete(
-  '/:userId/video/:videoId/comments/:commentId',
-  authHandler,
-  async (req, res, next) => {
-    try {
-      const { userId, videoId, commentId } = req.params
-      await userService.deleteComment(userId, videoId, commentId)
+      const { videoId, commentId } = req.params
+      await userService.deleteComment(req.user._id, videoId, commentId)
       res.send(`Comment with ${commentId} id deleted`)
     } catch (err) {
       next(err)
@@ -168,13 +148,13 @@ router.delete(
 )
 
 router.post(
-  '/:userId/video/:videoId/comments/:commentId',
+  '/video/:videoId/comments/:commentId',
   authHandler,
   async (req, res, next) => {
     try {
-      const { userId, videoId, commentId } = req.params
+      const { videoId, commentId } = req.params
       const comment = await userService.replyComment(
-        userId,
+        req.user._id,
         videoId,
         commentId,
         req.body
@@ -186,27 +166,23 @@ router.post(
   }
 )
 
-router.post(
-  '/:userId/likesComment/:commentId',
-  authHandler,
-  async (req, res, next) => {
-    try {
-      const { userId, commentId } = req.params
-      const comment = await userService.likeComment(userId, commentId)
-      res.send(comment)
-    } catch (err) {
-      next(err)
-    }
+router.post('/likesComment/:commentId', authHandler, async (req, res, next) => {
+  try {
+    const { commentId } = req.params
+    const comment = await userService.likeComment(req.user._id, commentId)
+    res.send(comment)
+  } catch (err) {
+    next(err)
   }
-)
+})
 
 router.delete(
-  '/:userId/likesComment/:commentId',
+  '/likesComment/:commentId',
   authHandler,
   async (req, res, next) => {
     try {
-      const { userId, commentId } = req.params
-      const comment = await userService.dislikeComment(userId, commentId)
+      const { commentId } = req.params
+      const comment = await userService.dislikeComment(req.user._id, commentId)
       res.send(comment)
     } catch (err) {
       next(err)
