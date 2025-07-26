@@ -33,6 +33,11 @@ const VideoSchema = new Schema(
       type: String,
       trim: true,
     },
+    uploadId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     storageObjectKey: {
       type: String,
       required: true,
