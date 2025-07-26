@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const BaseService = require('./base-service')
 const videoService = require('./video-service')
 const commentService = require('./comment-service')
@@ -98,6 +99,9 @@ class UserService extends BaseService {
     if (!user) {
       throw new Error('User could not be found.')
     }
+    await mongoose.connection.db.collection('sessions').deleteOne({
+      session: new RegExp(`"_id":"${userId}"`),
+    })
     await this.model.updateMany(
       { subscribers: user._id },
       { $pull: { subscribers: user._id } }

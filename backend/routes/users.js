@@ -52,7 +52,13 @@ router.delete('/me', authHandler, async (req, res, next) => {
   try {
     const userId = req.user._id
     await userService.deleteUser(userId)
-    res.send(`User with id of ${userId} is successfully deleted.`)
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Error destroying session after user deletion:', err)
+      }
+      res.clearCookie('connect.sid')
+      res.send(`User with id of ${userId} is successfully deleted.`)
+    })
   } catch (err) {
     next(err)
   }
