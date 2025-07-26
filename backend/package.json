@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "watch": "nodemon --ignore '*.json'"
+    "watch": "concurrently \"nodemon --ignore '*.json'\" \"node ./workers/sqs-worker.js\""
   },
   "author": "Davut Durmaz <durmaz.dvt@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "concurrently": "^9.2.0",
     "nodemon": "^3.1.9"
   },
   "dependencies": {
