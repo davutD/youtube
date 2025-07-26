@@ -27,11 +27,13 @@ class UserService extends BaseService {
     if (!user) {
       throw new Error('User could not be found.')
     }
+    const uploadId = videoDetails.key.split('/')[2].split('-')[0]
     const videoData = {
       creator: user._id,
       title: videoDetails.title,
       description: videoDetails.description,
       storageObjectKey: videoDetails.key,
+      uploadId: uploadId,
       status: 'PROCESSING',
     }
     const video = await videoService.insert(videoData)
