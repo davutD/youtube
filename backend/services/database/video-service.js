@@ -1,6 +1,7 @@
 const BaseService = require('./base-service')
 const commentService = require('./comment-service')
 const Video = require('../../models/video')
+const cloudStorageService = require('../cloud/storage/index')
 
 class VideoService extends BaseService {
   async findByTitle(title) {
@@ -31,8 +32,32 @@ class VideoService extends BaseService {
   }
 
   async deleteVideoByUserId(userId, videoId) {
+    const video = await this.model.findOne({ _id: videoId, creator: userId })
+    if (!video) {
+      throw new Error(
+        'Video not found or you do not have permission to delete it.'
+      )
+    }
+    const { uploadId } = video
+    const transcodedKeys = [
+      `thumbnails/${uploadId}.jpg`,
+      `videos/${uploadId}/1080p.mp4`,
+      `videos/${uploadId}/720p.mp4`,
+      `videos/${uploadId}/360p.mp4`,
+    ]
+    const rawKey = video.storageObjectKey
+    await cloudStorageService.deleteObjects(
+      process.env.AWS_S3_TRANSCODED_BUCKET_NAME,
+      transcodedKeys
+    )
+
+    await cloudStorageService.deleteObjects(
+      process.env.AWS_S3_RAW_BUCKET_NAME,
+      [rawKey]
+    )
+
     await commentService.deleteCommentsByVideoId(videoId)
-    return await this.model.findOneAndDelete({ _id: videoId, creator: userId })
+    return this.model.findByIdAndDelete(videoId)
   }
 
   async finalizeVideoProcessing(videoId, processingResult) {
