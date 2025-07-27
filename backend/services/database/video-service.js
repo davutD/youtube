@@ -8,6 +8,10 @@ class VideoService extends BaseService {
     return this.model.find().populate('creator', 'name surname')
   }
 
+  async find(id) {
+    return this.model.findById(id).populate('creator', 'name surname')
+  }
+
   async findByTitle(title) {
     return this.findBy('title', title)
   }
