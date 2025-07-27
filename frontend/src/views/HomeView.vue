@@ -1,10 +1,9 @@
 <script setup>
-import { onMounted, computed } from 'vue'
+import { onMounted } from 'vue'
 import { useMainStore } from '@/stores/store'
 import VideoCard from '@/components/video/VideoCard.vue'
 
 const mainStore = useMainStore()
-const videos = computed(() => mainStore.videoState.data)
 
 onMounted(() => {
   if (mainStore.videoState.data.length === 0) {
@@ -15,7 +14,7 @@ onMounted(() => {
 
 <template>
   <div v-if="!mainStore.videoState.isLoading" class="video-grid">
-    <VideoCard v-for="video in videos" :key="video.id" :video="video" />
+    <VideoCard v-for="video in mainStore.videoState.data" :key="video._id" :video="video" />
   </div>
   <div v-else>
     <p>Loading videos...</p>

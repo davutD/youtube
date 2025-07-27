@@ -31,7 +31,6 @@ export const useMainStore = defineStore('main', () => {
     try {
       const response = await apiClient.get('/videos')
       videoState.data = response.data
-      console.log(videoState.data)
     } catch (e) {
       videoState.error = 'Failed to fetch videos.'
       videoState.error = 'Could not load videos.'
