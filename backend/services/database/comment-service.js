@@ -14,6 +14,20 @@ class CommentService extends BaseService {
   async deleteCommentsByVideoId(videoId) {
     return this.model.deleteMany({ video: videoId })
   }
+  async findReplies(commentId) {
+    const parentComment = await this.model.findById(commentId).populate({
+      path: 'comments',
+      populate: {
+        path: 'creator',
+        select: 'name surname avatarUrl',
+      },
+    })
+
+    if (!parentComment) {
+      return []
+    }
+    return parentComment.comments
+  }
 }
 
 module.exports = new CommentService(Comment)

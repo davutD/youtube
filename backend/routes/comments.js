@@ -30,4 +30,13 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
+router.get('/:id/replies', async (req, res, next) => {
+  try {
+    const replies = await commentService.findReplies(req.params.id)
+    res.send(replies)
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router
