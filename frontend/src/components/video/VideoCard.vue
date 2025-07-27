@@ -1,23 +1,35 @@
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   video: {
     type: Object,
     required: true,
   },
 })
+
+const formattedUploadDate = computed(() => {
+  return new Date(props.video.createdAt).toLocaleDateString()
+})
 </script>
 
 <template>
   <div class="video-card">
-    <router-link :to="'/video/' + video.id">
+    <router-link :to="'/video/' + video._id">
       <img :src="video.thumbnailUrl" alt="Video thumbnail" class="thumbnail" />
     </router-link>
+
     <div class="details">
-      <img :src="video.channelAvatarUrl" alt="Channel avatar" class="channel-avatar" />
+      <img
+        v-if="video.creator?.avatarUrl"
+        :src="video.creator.avatarUrl"
+        alt="Channel avatar"
+        class="channel-avatar"
+      />
       <div class="meta">
         <h4 class="title">{{ video.title }}</h4>
-        <p class="channel-name">{{ video.channelName }}</p>
-        <p class="stats">{{ video.views }} &bull; {{ video.uploadDate }}</p>
+        <p class="channel-name">{{ video.creator?.name || 'Unknown Creator' }}</p>
+        <p class="stats">{{ video.likeCount || 0 }} views &bull; {{ formattedUploadDate }}</p>
       </div>
     </div>
   </div>
