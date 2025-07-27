@@ -1,376 +1,11 @@
 import { ref, reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
+import axios from 'axios'
 
-const allVideos = [
-  {
-    id: 'vue-js-from-scratch-p1',
-    videoSrc: 'https://www.youtube.com/watch?v=dtYN2GWS37c',
-    thumbnailUrl: 'https://picsum.photos/seed/vue/400/225',
-    title: 'Building a Vue.js App from Scratch',
-    views: '1.1M views',
-    uploadDate: '2 weeks ago',
-    description:
-      'Join me as I explore the fundamentals of Vue 3, including the Composition API, script setup, and building reusable components.',
-    channel: {
-      name: 'Vue Mastery',
-      avatarUrl: 'https://i.pravatar.cc/40?u=vuedev',
-      subscriberCount: '1.2M',
-    },
-    comments: [
-      { id: 1, author: 'Alex', avatarUrl: 'https://i.pravatar.cc/40?u=2', text: 'Great video!' },
-      {
-        id: 2,
-        author: 'Maria',
-        avatarUrl: 'https://i.pravatar.cc/40?u=3',
-        text: 'Could you do a follow-up on Pinia?',
-      },
-    ],
-  },
-  {
-    id: 'perfect-desk-setup-2025',
-    videoSrc: 'https://www.youtube.com/watch?v=dtYN2GWS37c',
-    thumbnailUrl: 'https://picsum.photos/seed/desk/400/225',
-    title: 'The Perfect Desk Setup for Developers (2025 Edition)',
-    views: '876K views',
-    uploadDate: '1 month ago',
-    description: 'A look at the latest gadgets and ergonomic setups to maximize productivity.',
-    channel: {
-      name: 'TechSource',
-      avatarUrl: 'https://i.pravatar.cc/40?u=tech',
-      subscriberCount: '2.5M',
-    },
-    comments: [
-      {
-        id: 1,
-        author: 'Dave',
-        avatarUrl: 'https://i.pravatar.cc/40?u=dave',
-        text: 'That monitor is amazing!',
-      },
-    ],
-  },
-  {
-    id: 'vue-js-from-scratch-p1',
-    videoSrc: 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/vue/400/225',
-    title: 'Building a Vue.js App from Scratch',
-    views: '1.1M views',
-    uploadDate: '2 weeks ago',
-    description:
-      'Join me as I explore the fundamentals of Vue 3, including the Composition API, script setup, and building reusable components.',
-    channel: {
-      name: 'Vue Mastery',
-      avatarUrl: 'https://i.pravatar.cc/40?u=vuedev',
-      subscriberCount: '1.2M',
-    },
-    comments: [
-      { id: 1, author: 'Alex', avatarUrl: 'https://i.pravatar.cc/40?u=2', text: 'Great video!' },
-      {
-        id: 2,
-        author: 'Maria',
-        avatarUrl: 'https://i.pravatar.cc/40?u=3',
-        text: 'Could you do a follow-up on Pinia?',
-      },
-    ],
-  },
-  {
-    id: 'perfect-desk-setup-2025',
-    videoSrc: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/desk/400/225',
-    title: 'The Perfect Desk Setup for Developers (2025 Edition)',
-    views: '876K views',
-    uploadDate: '1 month ago',
-    description: 'A look at the latest gadgets and ergonomic setups to maximize productivity.',
-    channel: {
-      name: 'TechSource',
-      avatarUrl: 'https://i.pravatar.cc/40?u=tech',
-      subscriberCount: '2.5M',
-    },
-    comments: [
-      {
-        id: 1,
-        author: 'Dave',
-        avatarUrl: 'https://i.pravatar.cc/40?u=dave',
-        text: 'That monitor is amazing!',
-      },
-    ],
-  },
-  {
-    id: 'vue-js-from-scratch-p1',
-    videoSrc: 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/vue/400/225',
-    title: 'Building a Vue.js App from Scratch',
-    views: '1.1M views',
-    uploadDate: '2 weeks ago',
-    description:
-      'Join me as I explore the fundamentals of Vue 3, including the Composition API, script setup, and building reusable components.',
-    channel: {
-      name: 'Vue Mastery',
-      avatarUrl: 'https://i.pravatar.cc/40?u=vuedev',
-      subscriberCount: '1.2M',
-    },
-    comments: [
-      { id: 1, author: 'Alex', avatarUrl: 'https://i.pravatar.cc/40?u=2', text: 'Great video!' },
-      {
-        id: 2,
-        author: 'Maria',
-        avatarUrl: 'https://i.pravatar.cc/40?u=3',
-        text: 'Could you do a follow-up on Pinia?',
-      },
-    ],
-  },
-  {
-    id: 'perfect-desk-setup-2025',
-    videoSrc: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/desk/400/225',
-    title: 'The Perfect Desk Setup for Developers (2025 Edition)',
-    views: '876K views',
-    uploadDate: '1 month ago',
-    description: 'A look at the latest gadgets and ergonomic setups to maximize productivity.',
-    channel: {
-      name: 'TechSource',
-      avatarUrl: 'https://i.pravatar.cc/40?u=tech',
-      subscriberCount: '2.5M',
-    },
-    comments: [
-      {
-        id: 1,
-        author: 'Dave',
-        avatarUrl: 'https://i.pravatar.cc/40?u=dave',
-        text: 'That monitor is amazing!',
-      },
-    ],
-  },
-  {
-    id: 'vue-js-from-scratch-p1',
-    videoSrc: 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/vue/400/225',
-    title: 'Building a Vue.js App from Scratch',
-    views: '1.1M views',
-    uploadDate: '2 weeks ago',
-    description:
-      'Join me as I explore the fundamentals of Vue 3, including the Composition API, script setup, and building reusable components.',
-    channel: {
-      name: 'Vue Mastery',
-      avatarUrl: 'https://i.pravatar.cc/40?u=vuedev',
-      subscriberCount: '1.2M',
-    },
-    comments: [
-      { id: 1, author: 'Alex', avatarUrl: 'https://i.pravatar.cc/40?u=2', text: 'Great video!' },
-      {
-        id: 2,
-        author: 'Maria',
-        avatarUrl: 'https://i.pravatar.cc/40?u=3',
-        text: 'Could you do a follow-up on Pinia?',
-      },
-    ],
-  },
-  {
-    id: 'perfect-desk-setup-2025',
-    videoSrc: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/desk/400/225',
-    title: 'The Perfect Desk Setup for Developers (2025 Edition)',
-    views: '876K views',
-    uploadDate: '1 month ago',
-    description: 'A look at the latest gadgets and ergonomic setups to maximize productivity.',
-    channel: {
-      name: 'TechSource',
-      avatarUrl: 'https://i.pravatar.cc/40?u=tech',
-      subscriberCount: '2.5M',
-    },
-    comments: [
-      {
-        id: 1,
-        author: 'Dave',
-        avatarUrl: 'https://i.pravatar.cc/40?u=dave',
-        text: 'That monitor is amazing!',
-      },
-    ],
-  },
-  {
-    id: 'vue-js-from-scratch-p1',
-    videoSrc: 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/vue/400/225',
-    title: 'Building a Vue.js App from Scratch',
-    views: '1.1M views',
-    uploadDate: '2 weeks ago',
-    description:
-      'Join me as I explore the fundamentals of Vue 3, including the Composition API, script setup, and building reusable components.',
-    channel: {
-      name: 'Vue Mastery',
-      avatarUrl: 'https://i.pravatar.cc/40?u=vuedev',
-      subscriberCount: '1.2M',
-    },
-    comments: [
-      { id: 1, author: 'Alex', avatarUrl: 'https://i.pravatar.cc/40?u=2', text: 'Great video!' },
-      {
-        id: 2,
-        author: 'Maria',
-        avatarUrl: 'https://i.pravatar.cc/40?u=3',
-        text: 'Could you do a follow-up on Pinia?',
-      },
-    ],
-  },
-  {
-    id: 'perfect-desk-setup-2025',
-    videoSrc: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/desk/400/225',
-    title: 'The Perfect Desk Setup for Developers (2025 Edition)',
-    views: '876K views',
-    uploadDate: '1 month ago',
-    description: 'A look at the latest gadgets and ergonomic setups to maximize productivity.',
-    channel: {
-      name: 'TechSource',
-      avatarUrl: 'https://i.pravatar.cc/40?u=tech',
-      subscriberCount: '2.5M',
-    },
-    comments: [
-      {
-        id: 1,
-        author: 'Dave',
-        avatarUrl: 'https://i.pravatar.cc/40?u=dave',
-        text: 'That monitor is amazing!',
-      },
-    ],
-  },
-  {
-    id: 'vue-js-from-scratch-p1',
-    videoSrc: 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/vue/400/225',
-    title: 'Building a Vue.js App from Scratch',
-    views: '1.1M views',
-    uploadDate: '2 weeks ago',
-    description:
-      'Join me as I explore the fundamentals of Vue 3, including the Composition API, script setup, and building reusable components.',
-    channel: {
-      name: 'Vue Mastery',
-      avatarUrl: 'https://i.pravatar.cc/40?u=vuedev',
-      subscriberCount: '1.2M',
-    },
-    comments: [
-      { id: 1, author: 'Alex', avatarUrl: 'https://i.pravatar.cc/40?u=2', text: 'Great video!' },
-      {
-        id: 2,
-        author: 'Maria',
-        avatarUrl: 'https://i.pravatar.cc/40?u=3',
-        text: 'Could you do a follow-up on Pinia?',
-      },
-    ],
-  },
-  {
-    id: 'perfect-desk-setup-2025',
-    videoSrc: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/desk/400/225',
-    title: 'The Perfect Desk Setup for Developers (2025 Edition)',
-    views: '876K views',
-    uploadDate: '1 month ago',
-    description: 'A look at the latest gadgets and ergonomic setups to maximize productivity.',
-    channel: {
-      name: 'TechSource',
-      avatarUrl: 'https://i.pravatar.cc/40?u=tech',
-      subscriberCount: '2.5M',
-    },
-    comments: [
-      {
-        id: 1,
-        author: 'Dave',
-        avatarUrl: 'https://i.pravatar.cc/40?u=dave',
-        text: 'That monitor is amazing!',
-      },
-    ],
-  },
-  {
-    id: 'vue-js-from-scratch-p1',
-    videoSrc: 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/vue/400/225',
-    title: 'Building a Vue.js App from Scratch',
-    views: '1.1M views',
-    uploadDate: '2 weeks ago',
-    description:
-      'Join me as I explore the fundamentals of Vue 3, including the Composition API, script setup, and building reusable components.',
-    channel: {
-      name: 'Vue Mastery',
-      avatarUrl: 'https://i.pravatar.cc/40?u=vuedev',
-      subscriberCount: '1.2M',
-    },
-    comments: [
-      { id: 1, author: 'Alex', avatarUrl: 'https://i.pravatar.cc/40?u=2', text: 'Great video!' },
-      {
-        id: 2,
-        author: 'Maria',
-        avatarUrl: 'https://i.pravatar.cc/40?u=3',
-        text: 'Could you do a follow-up on Pinia?',
-      },
-    ],
-  },
-  {
-    id: 'perfect-desk-setup-2025',
-    videoSrc: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/desk/400/225',
-    title: 'The Perfect Desk Setup for Developers (2025 Edition)',
-    views: '876K views',
-    uploadDate: '1 month ago',
-    description: 'A look at the latest gadgets and ergonomic setups to maximize productivity.',
-    channel: {
-      name: 'TechSource',
-      avatarUrl: 'https://i.pravatar.cc/40?u=tech',
-      subscriberCount: '2.5M',
-    },
-    comments: [
-      {
-        id: 1,
-        author: 'Dave',
-        avatarUrl: 'https://i.pravatar.cc/40?u=dave',
-        text: 'That monitor is amazing!',
-      },
-    ],
-  },
-  {
-    id: 'vue-js-from-scratch-p1',
-    videoSrc: 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/vue/400/225',
-    title: 'Building a Vue.js App from Scratch',
-    views: '1.1M views',
-    uploadDate: '2 weeks ago',
-    description:
-      'Join me as I explore the fundamentals of Vue 3, including the Composition API, script setup, and building reusable components.',
-    channel: {
-      name: 'Vue Mastery',
-      avatarUrl: 'https://i.pravatar.cc/40?u=vuedev',
-      subscriberCount: '1.2M',
-    },
-    comments: [
-      { id: 1, author: 'Alex', avatarUrl: 'https://i.pravatar.cc/40?u=2', text: 'Great video!' },
-      {
-        id: 2,
-        author: 'Maria',
-        avatarUrl: 'https://i.pravatar.cc/40?u=3',
-        text: 'Could you do a follow-up on Pinia?',
-      },
-    ],
-  },
-  {
-    id: 'perfect-desk-setup-2025',
-    videoSrc: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
-    thumbnailUrl: 'https://picsum.photos/seed/desk/400/225',
-    title: 'The Perfect Desk Setup for Developers (2025 Edition)',
-    views: '876K views',
-    uploadDate: '1 month ago',
-    description: 'A look at the latest gadgets and ergonomic setups to maximize productivity.',
-    channel: {
-      name: 'TechSource',
-      avatarUrl: 'https://i.pravatar.cc/40?u=tech',
-      subscriberCount: '2.5M',
-    },
-    comments: [
-      {
-        id: 1,
-        author: 'Dave',
-        avatarUrl: 'https://i.pravatar.cc/40?u=dave',
-        text: 'That monitor is amazing!',
-      },
-    ],
-  },
-]
+const apiClient = axios.create({
+  baseURL: 'http://localhost:3000',
+  withCredentials: true,
+})
 
 export const useMainStore = defineStore('main', () => {
   const isSidebarOpen = ref(false)
@@ -392,12 +27,14 @@ export const useMainStore = defineStore('main', () => {
 
   async function fetchAllVideos() {
     videoState.isLoading = true
+    videoState.error = null
     try {
-      // Simulate an API call
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      videoState.data = allVideos
+      const response = await apiClient.get('/videos')
+      videoState.data = response.data
+      console.log(videoState.data)
     } catch (e) {
       videoState.error = 'Failed to fetch videos.'
+      videoState.error = 'Could not load videos.'
     } finally {
       videoState.isLoading = false
     }
@@ -405,16 +42,13 @@ export const useMainStore = defineStore('main', () => {
 
   async function fetchVideoById(id) {
     selectedVideoState.isLoading = true
+    selectedVideoState.error = null
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      const video = allVideos.find((v) => v.id === id)
-      if (video) {
-        selectedVideoState.data = video
-      } else {
-        throw new Error('Video not found')
-      }
+      const response = await apiClient.get(`/videos/${id}`)
+      selectedVideoState.data = response.data
     } catch (e) {
-      selectedVideoState.error = e.message
+      console.error(`Failed to fetch video ${id}:`, e)
+      selectedVideoState.error = 'Could not load video.'
     } finally {
       selectedVideoState.isLoading = false
     }
@@ -478,13 +112,5 @@ export const useMainStore = defineStore('main', () => {
     selectedVideoState,
     fetchAllVideos,
     fetchVideoById,
-    // Getters
-    // videoCount,
-    // isReady,
-    // // Actions
-    // toggleSidebar,
-    // selectVideo,
-    // fetchVideos,
-    // reset,
   }
 })
