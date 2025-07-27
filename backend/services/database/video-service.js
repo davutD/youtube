@@ -4,9 +4,14 @@ const Video = require('../../models/video')
 const cloudStorageService = require('../cloud/storage/index')
 
 class VideoService extends BaseService {
+  async load() {
+    return this.model.find().populate('creator', 'name surname')
+  }
+
   async findByTitle(title) {
     return this.findBy('title', title)
   }
+
   async findAllByCreatorId(creatorId) {
     return this.findBy('creator', creatorId)
   }
