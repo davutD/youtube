@@ -53,6 +53,31 @@ export const useMainStore = defineStore('main', () => {
     }
   }
 
+  async function makeComment(videoId, commentText) {
+    try {
+      const response = await apiClient.post(`/videos/${videoId}/comments`, {
+        content: commentText,
+      })
+      if (selectedVideoState.data && selectedVideoState.data.comments) {
+        selectedVideoState.data.comments.unshift(response.data)
+      }
+    } catch (e) {
+      console.error('Failed to post comment:', e)
+    }
+  }
+
+  async function fetchReplies(comment) {
+    if (comment.repliesLoaded) return
+
+    try {
+      const response = await apiClient.get(`/comments/${comment._id}/replies`)
+      comment.comments = response.data
+      comment.repliesLoaded = true
+    } catch (e) {
+      console.error('Failed to fetch replies:', e)
+    }
+  }
+
   // --- Getters ---
   // Getters now access properties of the reactive objects.
   //   const videoCount = computed(() => videoState.data.length)
@@ -111,5 +136,7 @@ export const useMainStore = defineStore('main', () => {
     selectedVideoState,
     fetchAllVideos,
     fetchVideoById,
+    makeComment,
+    fetchReplies,
   }
 })
