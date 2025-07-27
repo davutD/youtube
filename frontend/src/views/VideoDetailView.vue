@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, watch } from 'vue'
+import { watchEffect, computed, onMounted } from 'vue'
 import VideoPlayer from '@/components/video/VideoPlayer.vue'
 import Details from '@/components/video/Details.vue'
 import CommentSection from '@/components/video/CommentSection.vue'
@@ -10,38 +10,27 @@ import { useMainStore } from '@/stores/store'
 const route = useRoute()
 const mainStore = useMainStore()
 
-// helper to grab the numeric/string id from the URL
-const videoId = () => route.params.id
+const video = computed(() => mainStore.selectedVideoState.data)
 
-// fetch when component mounts
-onMounted(() => {
-  mainStore.fetchVideoById(videoId())
-})
-
-// refetch if the user navigates to a different ID while on this page
-watch(
-  () => route.params.id,
-  (newId) => {
-    mainStore.fetchVideoById(newId)
+watchEffect(() => {
+  const videoId = route.params.id
+  if (videoId) {
+    mainStore.fetchVideoById(videoId)
   }
-)
+})
 </script>
 
 <template>
   <div>
-    <p v-if="mainStore.selectedVideoState.isLoading">Loading...</p>
-    <p v-else-if="mainStore.selectedVideoState.error">
-      {{ mainStore.selectedVideoState.error }}
-    </p>
-
-    <div v-else-if="mainStore.selectedVideoState.data" class="video-detail-layout">
+    <p v-if="mainStore.selectedVideoState.isLoading">Loading video...</p>
+    <p v-else-if="mainStore.selectedVideoState.error">{{ mainStore.selectedVideoState.error }}</p>
+    <div v-else-if="video" class="video-detail-layout">
       <div class="main-content">
-        <VideoPlayer :video-src="mainStore.selectedVideoState.data.videoSrc" />
-        <Details :video="mainStore.selectedVideoState.data" />
-        <CommentSection :comments="mainStore.selectedVideoState.data.comments || []" />
+        <VideoPlayer :video-src="video.playbackUrl" />
+        <Details :video="video" />
+        <CommentSection :comments="video.comments || []" />
       </div>
       <div class="recommended-sidebar">
-        <!-- show all videos or filter by something -->
         <RecommendedVideos :videos="mainStore.videoState.data" />
       </div>
     </div>
