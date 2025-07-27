@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+var cors = require('cors')
 const bodyParser = require('body-parser')
 const authRouter = require('./routes/auth')
 const usersRouter = require('./routes/users')
@@ -10,7 +11,13 @@ const errorHandler = require('./middleware/error-handler')
 const sessionMiddleware = require('./middleware/session')
 require('./mongo-connection')
 
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  credentials: true,
+}
+
 const app = express()
+app.use(cors(corsOptions))
 app.use(bodyParser.json())
 app.use(sessionMiddleware)
 app.use('/auth', authRouter)
