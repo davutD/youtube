@@ -1,6 +1,16 @@
 <script setup>
-defineProps({
-  video: Object,
+import { computed } from 'vue'
+
+const props = defineProps({
+  video: {
+    type: Object,
+    required: true,
+  },
+})
+
+const formattedUploadDate = computed(() => {
+  if (!props.video?.createdAt) return ''
+  return new Date(props.video.createdAt).toLocaleDateString()
 })
 </script>
 
@@ -8,14 +18,14 @@ defineProps({
   <div class="video-details-container">
     <h2>{{ video.title }}</h2>
     <div class="channel-info">
-      <img :src="video.channel.avatarUrl" alt="channel avatar" />
+      <img v-if="video.creator?.avatarUrl" :src="video.creator.avatarUrl" alt="channel avatar" />
       <div>
-        <strong>{{ video.channel.name }}</strong>
-        <p>{{ video.channel.subscriberCount }} subscribers</p>
+        <strong>{{ video.creator?.name }} {{ video.creator?.surname }}</strong>
+        <p>{{ video.creator?.subscriberCount || 0 }} subscribers</p>
       </div>
     </div>
     <div class="description-box">
-      <strong>{{ video.views }} &bull; {{ video.uploadDate }}</strong>
+      <strong>{{ video.likeCount || 0 }} views &bull; {{ formattedUploadDate }}</strong>
       <p>{{ video.description }}</p>
     </div>
   </div>
