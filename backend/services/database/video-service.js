@@ -28,7 +28,32 @@ class VideoService extends BaseService {
   }
 
   async deleteVideosByUserId(userId) {
-    return await this.model.deleteMany({ creator: userId })
+    const videos = await this.model.find({ creator: userId })
+    if (!videos || videos.length === 0) {
+      console.log(`No videos found for user ${userId} to delete.`)
+      return
+    }
+
+    const rawKeys = []
+    const transcodedKeys = []
+    for (const video of videos) {
+      rawKeys.push(video.storageObjectKey)
+      transcodedKeys.push(
+        `thumbnails/${video.uploadId}.jpg`,
+        `videos/${video.uploadId}/1080p.mp4`,
+        `videos/${video.uploadId}/720p.mp4`,
+        `videos/${video.uploadId}/360p.mp4`
+      )
+    }
+    await cloudStorageService.deleteObjects(
+      process.env.AWS_S3_RAW_BUCKET_NAME,
+      rawKeys
+    )
+    await cloudStorageService.deleteObjects(
+      process.env.AWS_S3_TRANSCODED_BUCKET_NAME,
+      transcodedKeys
+    )
+    return this.model.deleteMany({ creator: userId })
   }
 
   async deleteVideoByUserId(userId, videoId) {
