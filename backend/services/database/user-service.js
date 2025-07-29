@@ -199,20 +199,23 @@ class UserService extends BaseService {
     if (!user) {
       throw new Error('User could not be found.')
     }
-    const video = await videoService.find(videoId)
-    if (!video) {
+    const videoExists = await videoService.find(videoId)
+    if (!videoExists) {
       throw new Error('Video could not be found.')
     }
     const comment = await commentService.insert({
       creator: user._id,
-      video: video._id,
+      video: videoId,
       ...content,
     })
     if (!comment) {
       throw new Error('Comment could not be created.')
     }
-    video.comments.addToSet(comment._id)
-    await video.save()
+    await videoService.update(videoId, {
+      $addToSet: { comments: comment._id },
+      $inc: { totalCommentCount: 1 },
+    })
+
     return comment
   }
 
@@ -243,32 +246,34 @@ class UserService extends BaseService {
     if (!user) {
       throw new Error('User could not be found.')
     }
-    const video = await videoService.find(videoId)
-    if (!video) {
+    const videoExists = await videoService.find(videoId)
+    if (!videoExists) {
       throw new Error('Video could not be found.')
     }
-    const comment = await commentService.findCommentByVideo(
-      video._id,
-      commentId
-    )
-    if (!comment) {
+    const parentComment = await commentService.find(commentId)
+    if (!parentComment) {
       throw new Error(
         'The comment you are trying to reply to could not be found.'
       )
     }
+
     const newComment = await commentService.insert({
       creator: user._id,
-      video: video._id,
-      parentComment: comment._id,
+      video: videoId,
+      parentComment: parentComment._id,
       ...content,
     })
     if (!newComment) {
       throw new Error('Your reply could not be created.')
     }
-    comment.comments.addToSet(newComment._id)
-    video.comments.addToSet(newComment._id)
-    await video.save()
-    await comment.save()
+
+    parentComment.comments.addToSet(newComment._id)
+    await parentComment.save()
+    await videoService.update(videoId, {
+      $addToSet: { comments: newComment._id },
+      $inc: { totalCommentCount: 1 },
+    })
+
     return newComment
   }
 
