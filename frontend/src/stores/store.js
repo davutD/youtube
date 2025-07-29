@@ -54,8 +54,9 @@ export const useMainStore = defineStore('main', () => {
   }
 
   async function makeComment(videoId, commentText) {
+    console.log(videoId, commentText)
     try {
-      const response = await apiClient.post(`/videos/${videoId}/comments`, {
+      const response = await apiClient.post(`users/video/${videoId}/comments`, {
         content: commentText,
       })
       if (selectedVideoState.data && selectedVideoState.data.comments) {
@@ -63,6 +64,28 @@ export const useMainStore = defineStore('main', () => {
       }
     } catch (e) {
       console.error('Failed to post comment:', e)
+    }
+  }
+
+  async function replyComment(videoId, parentComment, replyText) {
+    try {
+      const response = await apiClient.post(
+        `/users/video/${videoId}/comments/${parentComment._id}`,
+        {
+          content: replyText,
+        },
+      )
+      if (!parentComment.comments) {
+        parentComment.comments = []
+      }
+      parentComment.comments.unshift(response.data)
+      parentComment.repliesLoaded = true
+
+      if (selectedVideoState.data) {
+        selectedVideoState.data.totalCommentCount++
+      }
+    } catch (e) {
+      console.error('Failed to post reply:', e)
     }
   }
 
@@ -137,6 +160,7 @@ export const useMainStore = defineStore('main', () => {
     fetchAllVideos,
     fetchVideoById,
     makeComment,
+    replyComment,
     fetchReplies,
   }
 })
