@@ -41,6 +41,10 @@ const UserSchema = new Schema(
       // `select: false` ensures the password hash is NOT returned in queries by default.
       select: false,
     },
+    avatarUrl: {
+      type: String,
+      trim: true,
+    },
     subscribers: [
       {
         type: Schema.Types.ObjectId,
