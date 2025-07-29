@@ -1,11 +1,13 @@
 <script setup>
 import { ref } from 'vue'
 import { useMainStore } from '@/stores/store'
-import CommentItem from './CommentItem.vue' // Import the new recursive component
+import CommentItem from './CommentItem.vue'
 
 const props = defineProps({
-  comments: Array,
-  videoId: String,
+  video: {
+    type: Object,
+    required: true,
+  },
 })
 
 const mainStore = useMainStore()
@@ -13,21 +15,26 @@ const newComment = ref('')
 
 function handlePostComment() {
   if (!newComment.value.trim()) return
-  mainStore.makeComment(props.videoId, newComment.value)
+  mainStore.makeComment(props.video._id, newComment.value)
   newComment.value = ''
 }
 </script>
 
 <template>
   <div class="comments-container">
-    <h3>{{ comments.length }} Comments</h3>
+    <h3>{{ video.totalCommentCount || 0 }} Comments</h3>
 
-    <!-- <div class="comment-form">
+    <div class="comment-form">
       <textarea v-model="newComment" placeholder="Add a comment..."></textarea>
       <button @click="handlePostComment">Comment</button>
-    </div> -->
+    </div>
 
-    <CommentItem v-for="comment in comments" :key="comment._id" :comment="comment" />
+    <CommentItem
+      v-for="comment in video.comments"
+      :key="comment._id"
+      :comment="comment"
+      :video-id="video._id"
+    />
   </div>
 </template>
 
@@ -47,19 +54,5 @@ function handlePostComment() {
 }
 .comment-form button {
   align-self: flex-end;
-}
-.comment-item {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-.comment-item img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #272727;
-}
-p {
-  margin: 0;
 }
 </style>

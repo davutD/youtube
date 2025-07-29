@@ -28,7 +28,7 @@ watchEffect(() => {
       <div class="main-content">
         <VideoPlayer :video-src="video.playbackUrl" />
         <Details :video="video" />
-        <CommentSection :comments="video.comments || []" />
+        <CommentSection :video="video" />
       </div>
       <div class="recommended-sidebar">
         <RecommendedVideos :videos="mainStore.videoState.data" />
