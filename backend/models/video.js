@@ -59,6 +59,11 @@ const VideoSchema = new Schema(
         autopopulate: false,
       },
     ],
+    totalCommentCount: {
+      type: Number,
+      default: 0,
+      min: [0, 'Comment count cannot be negative'],
+    },
     likedUsers: [
       {
         type: Schema.Types.ObjectId,
