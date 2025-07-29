@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import UserProfilePicture from '@/components/common/UserProfilePicture.vue'
 
 const props = defineProps({
   video: {
@@ -18,6 +19,7 @@ const formattedUploadDate = computed(() => {
   <div class="video-details-container">
     <h2>{{ video.title }}</h2>
     <div class="channel-info">
+      <UserProfilePicture :creator="video.creator" class="avatar" />
       <img v-if="video.creator?.avatarUrl" :src="video.creator.avatarUrl" alt="channel avatar" />
       <div>
         <strong>{{ video.creator?.name }} {{ video.creator?.surname }}</strong>

@@ -1,5 +1,6 @@
 <script setup>
 import { useMainStore } from '@/stores/store'
+import UserProfilePicture from '@/components/common/UserProfilePicture.vue'
 
 const props = defineProps({
   comment: Object,
@@ -14,12 +15,7 @@ function loadReplies() {
 
 <template>
   <div class="comment-item">
-    <img
-      v-if="comment.creator?.avatarUrl"
-      :src="comment.creator.avatarUrl"
-      alt="avatar"
-      class="avatar"
-    />
+    <UserProfilePicture :creator="comment.creator" class="avatar" />
     <div class="comment-content">
       <strong>{{ comment.creator?.name || 'User' }} {{ comment.creator?.surname }}</strong>
       <p>{{ comment.content }}</p>
@@ -38,13 +34,12 @@ function loadReplies() {
 <style scoped>
 .comment-item {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-top: 1.5rem;
 }
 .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
   background-color: #272727;
   align-self: flex-start;
 }
