@@ -1,12 +1,19 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/stores/store'
+import { useAuthStore } from '@/stores/auth'
 import TheSidebar from './components/layout/sidebar/TheSidebar.vue'
 import TheHeader from './components/layout/TheHeader.vue'
 
+const authStore = useAuthStore()
 const route = useRoute()
 const mainStore = useMainStore()
+
+onMounted(() => {
+  authStore.checkAuthStatus()
+})
+const showHeader = computed(() => route.meta.showHeader !== false)
 
 const mainContentMargin = computed(() => {
   if (!route.meta.showSidebar) {
@@ -21,13 +28,16 @@ const mainContentMargin = computed(() => {
 
 <template>
   <div id="app">
-    <TheHeader />
-    <TheSidebar v-if="route.meta.showSidebar" />
-    <main class="main-content">
-      <router-view />
-    </main>
+    <TheHeader v-if="showHeader" />
+    <div class="main-container" :class="{ 'with-header': showHeader }">
+      <TheSidebar v-if="route.meta.showSidebar" />
+      <main class="main-content">
+        <router-view />
+      </main>
+    </div>
   </div>
 </template>
+
 
 <style scoped>
 .main-content {
