@@ -1,40 +1,93 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useMainStore } from '@/stores/store'
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+import { useConfirm } from 'primevue/useconfirm'
+
+// PrimeVue & Custom Components
+import Menu from 'primevue/menu'
+import ConfirmDialog from 'primevue/confirmdialog'
 import InputText from 'primevue/inputtext'
 import logoUrl from '@/assets/youtube_logo.png'
 import IconButton from '@/components/common/IconButton.vue'
+import UserProfilePicture from '@/components/common/UserProfilePicture.vue'
 import SplitButton from 'primevue/splitbutton'
-import AvatarButton from '@/components/common/AvatarButton.vue'
-import VideoUploadDialog from '@/components/video/VideoUploadDialog.vue'
 import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
+import VideoUploadDialog from '@/components/video/VideoUploadDialog.vue'
 
+// --- SETUP ---
 const mainStore = useMainStore()
-const showUploadDialog = ref(false)
+const authStore = useAuthStore()
+const router = useRouter()
+const confirm = useConfirm()
 
+const showUploadDialog = ref(false)
+const menu = ref() // Ref for the avatar dropdown menu
+
+// --- METHODS ---
+
+// This logic is unchanged, as requested.
 const toggleLeftSidebar = () => {
   mainStore.toggleLeftSidebar()
 }
 
-const items = [
+const toggleAvatarMenu = (event) => {
+  menu.value.toggle(event)
+}
+
+const confirmLogout = () => {
+  confirm.require({
+    message: 'Are you sure you want to log out?',
+    header: 'Logout Confirmation',
+    icon: 'pi pi-info-circle',
+    acceptClass: 'p-button-danger',
+    accept: () => {
+      authStore.logout()
+    },
+  })
+}
+
+// --- COMPUTED PROPERTIES ---
+
+// Dynamic items for the "Create" button
+const createItems = computed(() => [
   {
     label: 'Upload Video',
-    icon: 'pi pi-plus',
+    icon: 'pi pi-upload',
     command: () => {
-      showUploadDialog.value = true
+      if (authStore.isAuthenticated) {
+        showUploadDialog.value = true
+      } else {
+        router.push('/login') // Redirect to login if not authenticated
+      }
     },
   },
-  {
-    label: 'Go Live',
-    icon: 'pi pi-video',
-    command: () => {},
-  },
-]
+  { label: 'Go Live', icon: 'pi pi-video' },
+])
+
+// Dynamic items for the avatar dropdown menu
+const avatarMenuItems = computed(() => {
+  if (authStore.isAuthenticated) {
+    return [
+      { label: 'Your Channel', icon: 'pi pi-user' },
+      { separator: true },
+      { label: 'Logout', icon: 'pi pi-sign-out', command: confirmLogout },
+    ]
+  } else {
+    return [
+      { label: 'Login', icon: 'pi pi-sign-in', command: () => router.push('/auth/login') },
+      { label: 'Register', icon: 'pi pi-user-plus', command: () => router.push('/auth/register') },
+    ]
+  }
+})
 </script>
 
 <template>
   <header class="app-header">
+    <ConfirmDialog />
+
     <div class="header-section left">
       <IconButton icon="pi pi-bars" @click="toggleLeftSidebar" />
       <router-link to="/">
@@ -52,17 +105,18 @@ const items = [
     </div>
 
     <div class="header-section right">
-      <SplitButton
-        dropdownIcon="pi pi-plus"
-        label="Create"
-        :model="items"
-        rounded
-        severity="secondary"
-      />
+      <SplitButton label="Create" :model="createItems" rounded severity="secondary" />
       <IconButton icon="pi pi-bell" />
-      <AvatarButton image="https://i.pravatar.cc/40" class="yt-avatar" />
+
+      <button v-if="authStore.isAuthenticated" @click="toggleAvatarMenu" class="avatar-button">
+        <UserProfilePicture :user="authStore.user" />
+      </button>
+      <IconButton v-else icon="pi pi-user-circle" @click="toggleAvatarMenu" class="guest-avatar" />
+
+      <Menu ref="menu" :model="avatarMenuItems" :popup="true" />
     </div>
-    <VideoUploadDialog :visible="showUploadDialog" />
+
+    <VideoUploadDialog v-model="showUploadDialog" />
   </header>
 </template>
 
@@ -117,7 +171,18 @@ const items = [
   max-width: 40rem;
 }
 
-.yt-avatar {
+.avatar-button {
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.guest-avatar {
+  font-size: 2.5rem;
   width: 2.5rem;
   height: 2.5rem;
 }
