@@ -5,6 +5,7 @@ import VideoDetailView from '../views/VideoDetailView.vue'
 import AuthView from '../views/AuthView.vue'
 import LoginForm from '@/components/auth/LoginForm.vue'
 import RegisterForm from '@/components/auth/RegisterForm.vue'
+import NotFoundView from '../views/NotFoundView.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
@@ -44,6 +45,12 @@ const router = createRouter({
           component: RegisterForm,
         },
       ],
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: NotFoundView,
+      meta: { showHeader: true, showSidebar: false },
     },
   ],
 })
