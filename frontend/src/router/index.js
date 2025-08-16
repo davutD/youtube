@@ -5,6 +5,7 @@ import VideoDetailView from '../views/VideoDetailView.vue'
 import AuthView from '../views/AuthView.vue'
 import LoginForm from '@/components/auth/LoginForm.vue'
 import RegisterForm from '@/components/auth/RegisterForm.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,7 +31,7 @@ const router = createRouter({
     {
       path: '/auth',
       component: AuthView,
-      meta: { showHeader: false, showSidebar: false },
+      meta: { showHeader: false, showSidebar: false, requiresGuest: true },
       children: [
         {
           path: 'login',
@@ -45,6 +46,16 @@ const router = createRouter({
       ],
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  const isAuthRoute = to.matched.some((record) => record.meta.requiresGuest)
+  if (isAuthRoute && authStore.isAuthenticated) {
+    next({ name: 'home' })
+  } else {
+    next()
+  }
 })
 
 export default router
