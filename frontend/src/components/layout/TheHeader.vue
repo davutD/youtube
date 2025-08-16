@@ -5,7 +5,6 @@ import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useConfirm } from 'primevue/useconfirm'
 
-// PrimeVue & Custom Components
 import Menu from 'primevue/menu'
 import ConfirmDialog from 'primevue/confirmdialog'
 import InputText from 'primevue/inputtext'
@@ -17,18 +16,14 @@ import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 import VideoUploadDialog from '@/components/video/VideoUploadDialog.vue'
 
-// --- SETUP ---
 const mainStore = useMainStore()
 const authStore = useAuthStore()
 const router = useRouter()
 const confirm = useConfirm()
 
 const showUploadDialog = ref(false)
-const menu = ref() // Ref for the avatar dropdown menu
+const menu = ref()
 
-// --- METHODS ---
-
-// This logic is unchanged, as requested.
 const toggleLeftSidebar = () => {
   mainStore.toggleLeftSidebar()
 }
@@ -49,9 +44,6 @@ const confirmLogout = () => {
   })
 }
 
-// --- COMPUTED PROPERTIES ---
-
-// Dynamic items for the "Create" button
 const createItems = computed(() => [
   {
     label: 'Upload Video',
@@ -60,14 +52,13 @@ const createItems = computed(() => [
       if (authStore.isAuthenticated) {
         showUploadDialog.value = true
       } else {
-        router.push('/login') // Redirect to login if not authenticated
+        router.push('/login')
       }
     },
   },
   { label: 'Go Live', icon: 'pi pi-video' },
 ])
 
-// Dynamic items for the avatar dropdown menu
 const avatarMenuItems = computed(() => {
   if (authStore.isAuthenticated) {
     return [
