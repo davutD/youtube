@@ -103,6 +103,35 @@ export const useMainStore = defineStore(
       }
     }
 
+    const pollingIntervals = new Map()
+
+    async function pollVideoStatus(videoId) {
+      if (pollingIntervals.has(videoId)) return
+
+      const interval = setInterval(async () => {
+        try {
+          const response = await apiClient.get(`/videos/${videoId}`)
+          const video = response.data
+          const videoIndex = videoState.data.findIndex((v) => v._id === videoId)
+          if (videoIndex !== -1) {
+            videoState.data[videoIndex] = video
+          }
+
+          if (video.status === 'READY' || video.status === 'FAILED') {
+            clearInterval(pollingIntervals.get(videoId))
+            pollingIntervals.delete(videoId)
+            console.log(`Polling stopped for video ${videoId}. Final status: ${video.status}`)
+          }
+        } catch (error) {
+          console.error(`Failed to poll status for video ${videoId}:`, error)
+          clearInterval(pollingIntervals.get(videoId))
+          pollingIntervals.delete(videoId)
+        }
+      }, 5000)
+
+      pollingIntervals.set(videoId, interval)
+    }
+
     // --- Getters ---
     // Getters now access properties of the reactive objects.
     //   const videoCount = computed(() => videoState.data.length)
@@ -164,6 +193,7 @@ export const useMainStore = defineStore(
       makeComment,
       replyComment,
       fetchReplies,
+      pollVideoStatus,
     }
   },
   {

@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import axios from 'axios'
+import { useMainStore } from '@/stores/store'
+
 import Dialog from 'primevue/dialog'
 import FileUpload from 'primevue/fileupload'
 import ProgressBar from 'primevue/progressbar'
@@ -12,6 +14,8 @@ const props = defineProps({
   modelValue: { type: Boolean, required: true },
 })
 const emit = defineEmits(['update:modelValue'])
+
+const mainStore = useMainStore()
 
 const uploadState = ref('initial')
 const uploadProgress = ref(0)
@@ -25,7 +29,7 @@ const apiClient = axios.create({
   withCredentials: true,
 })
 
-const isClosable = computed(() => uploadState.value !== 'uploading')
+const isClosable = computed(() => uploadState.value !== 'UPLOADING')
 
 function onFileSelect(event) {
   selectedFile.value = event.files[0]
@@ -53,11 +57,15 @@ async function handleUpload() {
       },
     })
 
-    await apiClient.post('/users/videos/finalize-upload', {
+    const finalizeResponse = await apiClient.post('/users/videos/finalize-upload', {
       key: key,
       title: title.value,
       description: description.value,
     })
+
+    const newVideo = finalizeResponse.data
+    mainStore.pollVideoStatus(newVideo._id)
+    mainStore.videoState.data.unshift(newVideo)
 
     uploadState.value = 'success'
   } catch (error) {
@@ -132,7 +140,7 @@ function closeDialog() {
       <div v-else-if="uploadState === 'success'" class="final-state">
         <i class="pi pi-check-circle success-icon"></i>
         <h3>Upload Successful!</h3>
-        <p>Your video is now being processed.</p>
+        <p>Your video is now being processed. You can close this window.</p>
       </div>
 
       <div v-else-if="uploadState === 'error'" class="final-state">
