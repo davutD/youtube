@@ -14,7 +14,7 @@ const formattedUploadDate = computed(() => {
 </script>
 
 <template>
-  <div class="video-card">
+  <div v-if="video.status === 'READY'" class="video-card">
     <router-link :to="'/video/' + video._id">
       <img :src="video.thumbnailUrl" alt="Video thumbnail" class="thumbnail" />
     </router-link>

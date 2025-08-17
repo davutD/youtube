@@ -103,33 +103,90 @@ export const useMainStore = defineStore(
       }
     }
 
-    const pollingIntervals = new Map()
+    const uploadState = reactive({
+      status: 'initial',
+      progress: 0,
+      error: null,
+      file: null,
+      title: '',
+      description: '',
+    })
 
-    async function pollVideoStatus(videoId) {
-      if (pollingIntervals.has(videoId)) return
+    function selectFileForUpload(file) {
+      uploadState.file = file
+      uploadState.title = file.name.replace(/\.[^/.]+$/, '')
+      uploadState.status = 'details'
+    }
 
-      const interval = setInterval(async () => {
-        try {
-          const response = await apiClient.get(`/videos/${videoId}`)
-          const video = response.data
-          const videoIndex = videoState.data.findIndex((v) => v._id === videoId)
-          if (videoIndex !== -1) {
-            videoState.data[videoIndex] = video
+    async function uploadVideo() {
+      if (!uploadState.file) return
+
+      uploadState.status = 'uploading'
+      uploadState.progress = 0
+      uploadState.error = null
+
+      try {
+        const {
+          data: { uploadUrl, key },
+        } = await apiClient.post('/users/videos/initiate-upload', {
+          filename: uploadState.file.name,
+        })
+
+        await axios.put(uploadUrl, uploadState.file, {
+          headers: { 'Content-Type': uploadState.file.type },
+          onUploadProgress: (e) => (uploadState.progress = Math.round((e.loaded * 100) / e.total)),
+        })
+
+        const { data: newVideo } = await apiClient.post('/users/videos/finalize-upload', {
+          key,
+          title: uploadState.title,
+          description: uploadState.description,
+        })
+
+        videoState.data.unshift(newVideo)
+
+        uploadState.status = 'processing'
+        await pollVideoStatus(newVideo._id)
+
+        uploadState.status = 'success'
+      } catch (err) {
+        console.error('Upload process failed:', err)
+        uploadState.error = err.response?.data?.message || 'The process failed.'
+        uploadState.status = 'error'
+      }
+    }
+
+    function resetUploadState() {
+      uploadState.status = 'initial'
+      uploadState.progress = 0
+      uploadState.error = null
+      uploadState.file = null
+      uploadState.title = ''
+      uploadState.description = ''
+    }
+
+    function pollVideoStatus(videoId) {
+      return new Promise((resolve, reject) => {
+        const interval = setInterval(async () => {
+          try {
+            const response = await apiClient.get(`/videos/${videoId}`)
+            const video = response.data
+
+            const videoIndex = videoState.data.findIndex((v) => v._id === videoId)
+            if (videoIndex !== -1) {
+              videoState.data[videoIndex] = video
+            }
+
+            if (video.status === 'READY' || video.status === 'FAILED') {
+              clearInterval(interval)
+              video.status === 'READY' ? resolve(video) : reject(new Error('Processing failed'))
+            }
+          } catch (error) {
+            clearInterval(interval)
+            reject(error)
           }
-
-          if (video.status === 'READY' || video.status === 'FAILED') {
-            clearInterval(pollingIntervals.get(videoId))
-            pollingIntervals.delete(videoId)
-            console.log(`Polling stopped for video ${videoId}. Final status: ${video.status}`)
-          }
-        } catch (error) {
-          console.error(`Failed to poll status for video ${videoId}:`, error)
-          clearInterval(pollingIntervals.get(videoId))
-          pollingIntervals.delete(videoId)
-        }
-      }, 5000)
-
-      pollingIntervals.set(videoId, interval)
+        }, 5000)
+      })
     }
 
     // --- Getters ---
@@ -188,12 +245,15 @@ export const useMainStore = defineStore(
       toggleLeftSidebar,
       videoState,
       selectedVideoState,
+      uploadState,
       fetchAllVideos,
       fetchVideoById,
       makeComment,
       replyComment,
       fetchReplies,
-      pollVideoStatus,
+      selectFileForUpload,
+      uploadVideo,
+      resetUploadState,
     }
   },
   {

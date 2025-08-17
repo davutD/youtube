@@ -1,6 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
-import axios from 'axios'
+import { computed } from 'vue'
 import { useMainStore } from '@/stores/store'
 
 import Dialog from 'primevue/dialog'
@@ -15,74 +14,22 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 
-const mainStore = useMainStore()
+const store = useMainStore()
 
-const uploadState = ref('initial')
-const uploadProgress = ref(0)
-const errorMessage = ref('')
-const selectedFile = ref(null)
-const title = ref('')
-const description = ref('')
-
-const apiClient = axios.create({
-  baseURL: 'http://localhost:3000',
-  withCredentials: true,
-})
-
-const isClosable = computed(() => uploadState.value !== 'UPLOADING')
+const uploadState = computed(() => store.uploadState)
+const isClosable = computed(() => !['uploading', 'processing'].includes(store.uploadState.status))
 
 function onFileSelect(event) {
-  selectedFile.value = event.files[0]
-  title.value = selectedFile.value.name.replace(/\.[^/.]+$/, '')
-  uploadState.value = 'details'
+  store.selectFileForUpload(event.files[0])
 }
 
-async function handleUpload() {
-  if (!selectedFile.value) return
-
-  uploadState.value = 'uploading'
-  errorMessage.value = ''
-  uploadProgress.value = 0
-
-  try {
-    const initiateResponse = await apiClient.post('/users/videos/initiate-upload', {
-      filename: selectedFile.value.name,
-    })
-    const { uploadUrl, key } = initiateResponse.data
-
-    await axios.put(uploadUrl, selectedFile.value, {
-      headers: { 'Content-Type': selectedFile.value.type },
-      onUploadProgress: (progressEvent) => {
-        uploadProgress.value = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-      },
-    })
-
-    const finalizeResponse = await apiClient.post('/users/videos/finalize-upload', {
-      key: key,
-      title: title.value,
-      description: description.value,
-    })
-
-    const newVideo = finalizeResponse.data
-    mainStore.pollVideoStatus(newVideo._id)
-    mainStore.videoState.data.unshift(newVideo)
-
-    uploadState.value = 'success'
-  } catch (error) {
-    console.error('Upload failed:', error)
-    errorMessage.value = error.response?.data?.message || 'The upload process failed.'
-    uploadState.value = 'error'
-  }
+function handleUpload() {
+  store.uploadVideo()
 }
 
 function closeDialog() {
   if (isClosable.value) {
-    uploadState.value = 'initial'
-    uploadProgress.value = 0
-    errorMessage.value = ''
-    selectedFile.value = null
-    title.value = ''
-    description.value = ''
+    store.resetUploadState()
     emit('update:modelValue', false)
   }
 }
@@ -99,7 +46,7 @@ function closeDialog() {
     @update:visible="closeDialog"
   >
     <div class="dialog-content">
-      <div v-if="uploadState === 'initial'">
+      <div v-if="uploadState.status === 'initial'">
         <FileUpload
           name="video"
           @select="onFileSelect"
@@ -118,47 +65,53 @@ function closeDialog() {
         </FileUpload>
       </div>
 
-      <div v-else-if="uploadState === 'details'" class="details-state">
+      <div v-else-if="uploadState.status === 'details'" class="details-state">
         <h3>Video Details</h3>
-        <p class="filename"><strong>File:</strong> {{ selectedFile.name }}</p>
+        <p class="filename"><strong>File:</strong> {{ uploadState.file.name }}</p>
         <div class="field">
           <label for="video-title">Title</label>
-          <InputText id="video-title" v-model="title" />
+          <InputText id="video-title" v-model="uploadState.title" />
         </div>
         <div class="field">
           <label for="video-description">Description</label>
-          <Textarea id="video-description" v-model="description" rows="4" />
+          <Textarea id="video-description" v-model="uploadState.description" rows="4" />
         </div>
       </div>
 
-      <div v-else-if="uploadState === 'uploading'" class="progress-state">
+      <div v-else-if="uploadState.status === 'uploading'" class="progress-state">
         <h3>Uploading...</h3>
-        <ProgressBar :value="uploadProgress" />
-        <small>{{ selectedFile.name }} ({{ uploadProgress }}%)</small>
+        <ProgressBar :value="uploadState.progress" />
+        <small>{{ uploadState.file.name }} ({{ uploadState.progress }}%)</small>
       </div>
 
-      <div v-else-if="uploadState === 'success'" class="final-state">
+      <div v-else-if="uploadState.status === 'processing'" class="progress-state">
+        <h3>Processing video...</h3>
+        <p>This may take a few moments. You can close this window.</p>
+        <ProgressBar mode="indeterminate" style="height: 0.5em" />
+      </div>
+
+      <div v-else-if="uploadState.status === 'success'" class="final-state">
         <i class="pi pi-check-circle success-icon"></i>
         <h3>Upload Successful!</h3>
-        <p>Your video is now being processed. You can close this window.</p>
+        <p>Your video is now ready.</p>
       </div>
 
-      <div v-else-if="uploadState === 'error'" class="final-state">
+      <div v-else-if="uploadState.status === 'error'" class="final-state">
         <i class="pi pi-times-circle error-icon"></i>
         <h3>Upload Failed</h3>
-        <p>{{ errorMessage }}</p>
+        <p>{{ uploadState.error }}</p>
       </div>
     </div>
 
     <template #footer>
       <Button
-        v-if="uploadState === 'details'"
+        v-if="uploadState.status === 'details'"
         label="Upload"
         icon="pi pi-upload"
         @click="handleUpload"
       />
       <Button
-        v-if="uploadState === 'success' || uploadState === 'error'"
+        v-if="['success', 'error'].includes(uploadState.status)"
         label="Done"
         @click="closeDialog"
         autofocus

@@ -6,9 +6,7 @@ import VideoCard from '@/components/video/VideoCard.vue'
 const mainStore = useMainStore()
 
 onMounted(() => {
-  if (mainStore.videoState.data.length === 0) {
-    mainStore.fetchAllVideos()
-  }
+  mainStore.fetchAllVideos()
 })
 </script>
 
