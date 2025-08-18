@@ -1,9 +1,10 @@
 <script setup>
-import { watchEffect, computed, onMounted } from 'vue'
+import { watchEffect, computed } from 'vue'
 import VideoPlayer from '@/components/video/VideoPlayer.vue'
 import Details from '@/components/video/Details.vue'
 import CommentSection from '@/components/video/CommentSection.vue'
 import RecommendedVideos from '@/components/video/RecommendedVideos.vue'
+import DrawerSidebar from '@/components/layout/sidebar/DrawerSidebar.vue'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/stores/store'
 
@@ -22,6 +23,7 @@ watchEffect(() => {
 
 <template>
   <div>
+    <DrawerSidebar v-if="route.meta.showSidebarDrawer" />
     <p v-if="mainStore.selectedVideoState.isLoading">Loading video...</p>
     <p v-else-if="mainStore.selectedVideoState.error">{{ mainStore.selectedVideoState.error }}</p>
     <div v-else-if="video" class="video-detail-layout">

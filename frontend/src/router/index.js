@@ -27,7 +27,7 @@ const router = createRouter({
       path: '/video/:id',
       name: 'video-detail',
       component: VideoDetailView,
-      meta: { showSidebar: false, showHeader: true },
+      meta: { showSidebar: false, showHeader: true, showSidebarDrawer: true },
     },
     {
       path: '/auth',
