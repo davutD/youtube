@@ -15,6 +15,15 @@ export const useMainStore = defineStore(
       isSidebarOpen.value = !isSidebarOpen.value
     }
 
+    const isDrawerSidebarOpen = ref(false)
+    function toggleDrawerSidebar() {
+      isDrawerSidebarOpen.value = !isDrawerSidebarOpen.value
+    }
+
+    function closeDrawerSidebar() {
+      isDrawerSidebarOpen.value = false
+    }
+
     const videoState = reactive({
       data: [],
       isLoading: false,
@@ -242,7 +251,10 @@ export const useMainStore = defineStore(
     // --------------------------------------------------
     return {
       isSidebarOpen,
+      isDrawerSidebarOpen,
       toggleLeftSidebar,
+      toggleDrawerSidebar,
+      closeDrawerSidebar,
       videoState,
       selectedVideoState,
       uploadState,

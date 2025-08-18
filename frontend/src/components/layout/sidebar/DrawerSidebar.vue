@@ -8,12 +8,12 @@ import logoUrl from '@/assets/youtube_logo.png'
 const mainStore = useMainStore()
 
 const toggleLeftSidebar = () => {
-  mainStore.toggleLeftSidebar()
+  mainStore.toggleDrawerSidebar()
 }
 </script>
 
 <template>
-  <Drawer :visible="mainStore.isSidebarOpen" :showCloseIcon="false" class="app-drawer">
+  <Drawer :visible="mainStore.isDrawerSidebarOpen" :showCloseIcon="false" class="app-drawer">
     <div class="shared-header-left-section">
       <IconButton icon="pi pi-bars" @click="toggleLeftSidebar" />
       <router-link to="/">

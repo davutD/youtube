@@ -1,5 +1,5 @@
 <script setup>
-import { watchEffect, computed } from 'vue'
+import { watchEffect, computed, onMounted } from 'vue'
 import VideoPlayer from '@/components/video/VideoPlayer.vue'
 import Details from '@/components/video/Details.vue'
 import CommentSection from '@/components/video/CommentSection.vue'
@@ -10,6 +10,10 @@ import { useMainStore } from '@/stores/store'
 
 const route = useRoute()
 const mainStore = useMainStore()
+
+onMounted(() => {
+  mainStore.closeDrawerSidebar()
+})
 
 const video = computed(() => mainStore.selectedVideoState.data)
 

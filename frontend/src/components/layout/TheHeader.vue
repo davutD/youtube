@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useMainStore } from '@/stores/store'
 import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useConfirm } from 'primevue/useconfirm'
 
 import Menu from 'primevue/menu'
@@ -18,6 +18,7 @@ import VideoUploadDialog from '@/components/video/VideoUploadDialog.vue'
 
 const mainStore = useMainStore()
 const authStore = useAuthStore()
+const route = useRoute()
 const router = useRouter()
 const confirm = useConfirm()
 
@@ -25,7 +26,11 @@ const showUploadDialog = ref(false)
 const menu = ref()
 
 const toggleLeftSidebar = () => {
-  mainStore.toggleLeftSidebar()
+  if (route.meta.showSidebar) {
+    mainStore.toggleLeftSidebar()
+  } else {
+    mainStore.toggleDrawerSidebar()
+  }
 }
 
 const toggleAvatarMenu = (event) => {
