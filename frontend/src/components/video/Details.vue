@@ -23,7 +23,7 @@ const formattedUploadDate = computed(() => {
       <img v-if="video.creator?.avatarUrl" :src="video.creator.avatarUrl" alt="channel avatar" />
       <div>
         <strong>{{ video.creator?.name }} {{ video.creator?.surname }}</strong>
-        <p>{{ video.creator?.subscriberCount || 0 }} subscribers</p>
+        <p>{{ video.creator.subscriberCount ?? 0 }} subscribers</p>
       </div>
     </div>
     <div class="description-box">
@@ -57,5 +57,10 @@ const formattedUploadDate = computed(() => {
 p {
   margin: 0;
   line-height: 1.5;
+}
+.description-box p {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 </style>
