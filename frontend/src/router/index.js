@@ -6,6 +6,7 @@ import AuthView from '../views/AuthView.vue'
 import LoginForm from '@/components/auth/LoginForm.vue'
 import RegisterForm from '@/components/auth/RegisterForm.vue'
 import NotFoundView from '../views/NotFoundView.vue'
+import ChannelView from '@/views/ChannelView.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
@@ -45,6 +46,11 @@ const router = createRouter({
           component: RegisterForm,
         },
       ],
+    },
+    {
+      path: '/channel/:userId',
+      component: ChannelView,
+      meta: { showHeader: true, showSidebar: true },
     },
     {
       path: '/:pathMatch(.*)*',

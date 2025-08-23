@@ -19,10 +19,15 @@ const formattedUploadDate = computed(() => {
   <div class="video-details-container">
     <h2>{{ video.title }}</h2>
     <div class="channel-info">
-      <UserProfilePicture :creator="video.creator" class="avatar" />
+      <router-link :to="`/channel/${video.creator._id}`">
+        <UserProfilePicture :user="video.creator" class="avatar" />
+      </router-link>
+
       <img v-if="video.creator?.avatarUrl" :src="video.creator.avatarUrl" alt="channel avatar" />
       <div>
-        <strong>{{ video.creator?.name }} {{ video.creator?.surname }}</strong>
+        <router-link :to="`/channel/${video.creator._id}`" class="channel-link">
+          <strong>{{ video.creator?.name }} {{ video.creator?.surname }}</strong>
+        </router-link>
         <p>{{ video.creator.subscriberCount ?? 0 }} subscribers</p>
       </div>
     </div>
