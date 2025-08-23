@@ -7,6 +7,10 @@ const User = require('../../models/user')
 const { v4: uuidv4 } = require('uuid')
 
 class UserService extends BaseService {
+  async find(id) {
+    return this.model.findById(id).populate('videos')
+  }
+
   async findByName(name) {
     return this.findBy('name', name)
   }
