@@ -55,8 +55,24 @@ const UserSchema = new Schema(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 )
+
+UserSchema.virtual('subscriberCount').get(function () {
+  return this.subscribers ? this.subscribers.length : 0
+})
+
+UserSchema.virtual('videos', {
+  ref: 'Video',
+  localField: '_id',
+  foreignField: 'creator',
+})
+
+UserSchema.virtual('videoCount').get(function () {
+  return this.videos ? this.videos.length : 0
+})
 
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next()
