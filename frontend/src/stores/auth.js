@@ -10,6 +10,7 @@ const apiClient = axios.create({
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
+  const publicProfile = ref(null)
   const isLoading = ref(false)
   const authError = ref(null)
   const isAuthenticated = computed(() => !!user.value)
@@ -63,8 +64,19 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function fetchUserById(userId) {
+    publicProfile.value = null
+    try {
+      const response = await apiClient.get(`/users/${userId}`)
+      publicProfile.value = response.data
+    } catch (error) {
+      console.error('Failed to fetch user profile:', error)
+    }
+  }
+
   return {
     user,
+    publicProfile,
     isLoading,
     authError,
     isAuthenticated,
@@ -72,5 +84,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     register,
     logout,
+    fetchUserById,
   }
 })
