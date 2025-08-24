@@ -7,6 +7,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  hideCreatorInfo: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const formattedUploadDate = computed(() => {
@@ -21,14 +25,18 @@ const formattedUploadDate = computed(() => {
     </router-link>
 
     <div class="details">
-      <router-link :to="`/channel/${video.creator._id}`">
+      <router-link v-if="!hideCreatorInfo" :to="`/channel/${video.creator._id}`">
         <UserProfilePicture :user="video.creator" class="channel-avatar" />
       </router-link>
       <div class="meta">
         <router-link :to="'/video/' + video._id" class="title-link">
           <h4 class="title">{{ video.title }}</h4>
         </router-link>
-        <router-link :to="`/channel/${video.creator._id}`" class="channel-name">
+        <router-link
+          v-if="!hideCreatorInfo"
+          :to="`/channel/${video.creator._id}`"
+          class="channel-name"
+        >
           <strong>{{ video.creator?.name }} {{ video.creator?.surname }}</strong>
         </router-link>
         <p class="stats">{{ video.likeCount || 0 }} views &bull; {{ formattedUploadDate }}</p>
