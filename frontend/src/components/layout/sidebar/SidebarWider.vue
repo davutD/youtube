@@ -6,7 +6,9 @@ import Button from '@/components/common/Button.vue'
   <aside class="wider-sidebar">
     <nav>
       <ul>
-        <li><Button icon="pi pi-home" label="Home" text class="nav-item" /></li>
+        <RouterLink to="/"
+          ><Button icon="pi pi-home" label="Home" text class="nav-item"
+        /></RouterLink>
         <li><Button icon="pi pi-bolt" label="Shorts" text class="nav-item" /></li>
         <li><Button icon="pi pi-list" label="Subscriptions" text class="nav-item" /></li>
         <hr />

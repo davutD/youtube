@@ -1,5 +1,5 @@
 <script setup>
-import Button from '@/components/common/Button.vue'
+import Button from 'primevue/button'
 </script>
 
 <template>
@@ -7,7 +7,9 @@ import Button from '@/components/common/Button.vue'
     <nav>
       <ul>
         <li>
-          <Button icon="pi pi-home" label="Home" text />
+          <RouterLink to="/" class="narrow-sidebar-router-link"
+            ><Button icon="pi pi-home" label="Home" text
+          /></RouterLink>
         </li>
         <li>
           <Button icon="pi pi-bolt" label="Shorts" text />
@@ -58,5 +60,9 @@ li :deep(.p-button-label) {
   margin-top: 0.4rem;
   font-size: 0.65rem;
   font-weight: normal;
+}
+.narrow-sidebar-router-link {
+  text-decoration: none;
+  color: inherit;
 }
 </style>
