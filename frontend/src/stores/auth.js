@@ -74,6 +74,37 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function subscribe(channelId) {
+    if (!isAuthenticated.value) {
+      router.push('/auth/login')
+      return
+    }
+    try {
+      await apiClient.post(`/users/subscribers/${channelId}`)
+      if (publicProfile.value && publicProfile.value._id === channelId) {
+        publicProfile.value.subscribers.push(user.value._id)
+        publicProfile.value.subscriberCount++
+      }
+    } catch (error) {
+      console.error('Failed to subscribe:', error)
+    }
+  }
+
+  async function unsubscribe(channelId) {
+    if (!isAuthenticated.value) return
+    try {
+      await apiClient.delete(`/users/subscribers/${channelId}`)
+      if (publicProfile.value && publicProfile.value._id === channelId) {
+        publicProfile.value.subscribers = publicProfile.value.subscribers.filter(
+          (id) => id !== user.value._id,
+        )
+        publicProfile.value.subscriberCount--
+      }
+    } catch (error) {
+      console.error('Failed to unsubscribe:', error)
+    }
+  }
+
   return {
     user,
     publicProfile,
@@ -85,5 +116,7 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     logout,
     fetchUserById,
+    subscribe,
+    unsubscribe,
   }
 })
