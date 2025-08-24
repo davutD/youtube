@@ -146,20 +146,22 @@ const avatarMenuItems = computed(() => {
 .header-section.left {
   justify-content: flex-start;
   gap: 1.5rem;
-  width: 15%;
+  /* width: 15%; */
   padding: 0 2rem;
 }
 
 .header-section.center {
   justify-content: center;
-  width: 60%;
+  flex-grow: 1;
+  min-width: 0;
+  /* width: 60%; */
   padding: 0 2rem;
 }
 
 .header-section.right {
   justify-content: flex-end;
   gap: 1rem;
-  width: 15%;
+  /* width: 15%; */
   padding: 0 1rem;
 }
 
