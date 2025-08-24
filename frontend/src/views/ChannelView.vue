@@ -3,7 +3,7 @@ import { onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import ChannelHeader from '@/components/channel/ChannelHeader.vue'
-import ChannelNav from '@/components/channel/ChannelNavbar.vue'
+import ChannelNavbar from '@/components/channel/ChannelNavbar.vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -24,9 +24,9 @@ watch(
 </script>
 
 <template>
-  <div v-if="channel">
+  <div :key="$route.fullPath" v-if="channel">
     <ChannelHeader :channel="channel" />
-    <ChannelNav :user-id="channel._id" />
+    <ChannelNavbar :user-id="channel._id" />
     <div class="channel-content">
       <router-view />
     </div>

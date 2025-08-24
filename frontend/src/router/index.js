@@ -7,6 +7,7 @@ import LoginForm from '@/components/auth/LoginForm.vue'
 import RegisterForm from '@/components/auth/RegisterForm.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 import ChannelView from '@/views/ChannelView.vue'
+import ChannelVideos from '@/components/channel/ChannelVideos.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
@@ -51,6 +52,7 @@ const router = createRouter({
       path: '/channel/:userId',
       component: ChannelView,
       meta: { showHeader: true, showSidebar: true },
+      children: [{ path: 'videos', component: ChannelVideos }],
     },
     {
       path: '/:pathMatch(.*)*',
