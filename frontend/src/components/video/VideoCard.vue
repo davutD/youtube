@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import UserProfilePicture from '@/components/common/UserProfilePicture.vue'
 
 const props = defineProps({
   video: {
@@ -20,15 +21,16 @@ const formattedUploadDate = computed(() => {
     </router-link>
 
     <div class="details">
-      <img
-        v-if="video.creator?.avatarUrl"
-        :src="video.creator.avatarUrl"
-        alt="Channel avatar"
-        class="channel-avatar"
-      />
+      <router-link :to="`/channel/${video.creator._id}`">
+        <UserProfilePicture :user="video.creator" class="channel-avatar" />
+      </router-link>
       <div class="meta">
-        <h4 class="title">{{ video.title }}</h4>
-        <p class="channel-name">{{ video.creator?.name || 'Unknown Creator' }}</p>
+        <router-link :to="'/video/' + video._id" class="title-link">
+          <h4 class="title">{{ video.title }}</h4>
+        </router-link>
+        <router-link :to="`/channel/${video.creator._id}`" class="channel-name">
+          <strong>{{ video.creator?.name }} {{ video.creator?.surname }}</strong>
+        </router-link>
         <p class="stats">{{ video.likeCount || 0 }} views &bull; {{ formattedUploadDate }}</p>
       </div>
     </div>
@@ -53,12 +55,13 @@ const formattedUploadDate = computed(() => {
 
 .details {
   display: flex;
+  align-items: center;
   gap: 0.75rem;
 }
 
 .channel-avatar {
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
   background-color: #282828;
 }
@@ -71,11 +74,19 @@ const formattedUploadDate = computed(() => {
 .title {
   font-weight: 500;
   margin: 0 0 0.25rem 0;
+  text-decoration: none;
+  color: inherit;
+}
+.title-link {
+  text-decoration: none;
+  color: inherit;
 }
 
 .channel-name,
 .stats {
   font-size: 0.9rem;
   margin: 0;
+  text-decoration: none;
+  color: inherit;
 }
 </style>

@@ -63,6 +63,10 @@ p {
   margin: 0;
   line-height: 1.5;
 }
+.channel-link {
+  text-decoration: none;
+  color: inherit;
+}
 .description-box p {
   overflow-wrap: break-word;
   word-break: break-word;
