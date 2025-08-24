@@ -9,7 +9,7 @@ import Menu from 'primevue/menu'
 import ConfirmDialog from 'primevue/confirmdialog'
 import InputText from 'primevue/inputtext'
 import logoUrl from '@/assets/youtube_logo.png'
-import IconButton from '@/components/common/IconButton.vue'
+import Button from 'primevue/button'
 import UserProfilePicture from '@/components/common/UserProfilePicture.vue'
 import SplitButton from 'primevue/splitbutton'
 import InputGroup from 'primevue/inputgroup'
@@ -85,7 +85,7 @@ const avatarMenuItems = computed(() => {
     <ConfirmDialog />
 
     <div class="header-section left">
-      <IconButton icon="pi pi-bars" @click="toggleLeftSidebar" />
+      <Button icon="pi pi-bars" rounded @click="toggleLeftSidebar" />
       <router-link to="/">
         <img :src="logoUrl" alt="Logo" class="logo" />
       </router-link>
@@ -95,19 +95,25 @@ const avatarMenuItems = computed(() => {
       <InputGroup class="yt-inputgroup">
         <InputText placeholder="Search" />
         <InputGroupAddon>
-          <IconButton icon="pi pi-search" :rounded="false" />
+          <Button icon="pi pi-search" :rounded="false" />
         </InputGroupAddon>
       </InputGroup>
     </div>
 
     <div class="header-section right">
       <SplitButton label="Create" :model="createItems" rounded severity="secondary" />
-      <IconButton icon="pi pi-bell" />
+      <Button icon="pi pi-bell" rounded />
 
-      <button v-if="authStore.isAuthenticated" @click="toggleAvatarMenu" class="avatar-button">
+      <Button v-if="authStore.isAuthenticated" @click="toggleAvatarMenu" class="avatar-button">
         <UserProfilePicture :user="authStore.user" />
-      </button>
-      <IconButton v-else icon="pi pi-user-circle" @click="toggleAvatarMenu" class="guest-avatar" />
+      </Button>
+      <Button
+        v-else
+        icon="pi pi-user-circle"
+        rounded
+        @click="toggleAvatarMenu"
+        class="guest-avatar"
+      />
 
       <Menu ref="menu" :model="avatarMenuItems" :popup="true" />
     </div>
