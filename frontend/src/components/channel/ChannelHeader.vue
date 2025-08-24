@@ -1,10 +1,29 @@
 <script setup>
+import { computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import UserProfilePicture from '@/components/common/UserProfilePicture.vue'
 import Button from 'primevue/button'
 
-defineProps({
+const props = defineProps({
   channel: Object,
 })
+
+const authStore = useAuthStore()
+
+const isSubscribed = computed(() => {
+  if (!authStore.isAuthenticated || !props.channel?.subscribers) {
+    return false
+  }
+  return props.channel.subscribers.includes(authStore.user._id)
+})
+
+function handleSubscribeToggle() {
+  if (isSubscribed.value) {
+    authStore.unsubscribe(props.channel._id)
+  } else {
+    authStore.subscribe(props.channel._id)
+  }
+}
 </script>
 
 <template>
@@ -24,7 +43,19 @@ defineProps({
         <p class="description">
           {{ channel.description || 'This channel does not have a description.' }}
         </p>
-        <Button label="Subscribe" icon="pi pi-bell" />
+        <Button
+          v-if="authStore.isAuthenticated && authStore.user._id !== channel._id"
+          :label="isSubscribed ? 'Subscribed' : 'Subscribe'"
+          :icon="isSubscribed ? 'pi pi-check' : 'pi pi-bell'"
+          :severity="isSubscribed ? 'secondary' : 'danger'"
+          @click="handleSubscribeToggle"
+        />
+        <!-- <Button
+          v-else-if="!authStore.isAuthenticated"
+          label="Subscribe"
+          icon="pi pi-bell"
+          @click="handleSubscribeToggle"
+        /> -->
       </div>
     </div>
   </div>

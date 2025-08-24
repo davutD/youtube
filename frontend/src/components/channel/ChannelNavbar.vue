@@ -39,4 +39,7 @@ function navigateTo(path) {
 </template>
 
 <style scoped>
+.card {
+  margin-top: 1rem;
+}
 </style>
