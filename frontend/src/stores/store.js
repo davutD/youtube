@@ -36,6 +36,12 @@ export const useMainStore = defineStore(
       error: null,
     })
 
+    const userVideoState = reactive({
+      data: [],
+      isLoading: false,
+      error: null,
+    })
+
     async function fetchAllVideos() {
       videoState.isLoading = true
       videoState.error = null
@@ -61,6 +67,21 @@ export const useMainStore = defineStore(
         selectedVideoState.error = 'Could not load video.'
       } finally {
         selectedVideoState.isLoading = false
+      }
+    }
+
+    async function fetchAllVideosByCreator(creatorId) {
+      userVideoState.isLoading = true
+      userVideoState.error = null
+      try {
+        const response = await apiClient.get(`/videos/search?userId=${creatorId}`)
+        console.log(response.data)
+        userVideoState.data = response.data
+      } catch (e) {
+        console.error('Failed to fetch creator videos:', e)
+        userVideoState.error = 'Could not load videos for this channel.'
+      } finally {
+        userVideoState.isLoading = false
       }
     }
 
@@ -257,9 +278,11 @@ export const useMainStore = defineStore(
       closeDrawerSidebar,
       videoState,
       selectedVideoState,
+      userVideoState,
       uploadState,
       fetchAllVideos,
       fetchVideoById,
+      fetchAllVideosByCreator,
       makeComment,
       replyComment,
       fetchReplies,
