@@ -27,7 +27,9 @@ class VideoService extends BaseService {
   }
 
   async findAllByCreatorId(creatorId) {
-    return this.findBy('creator', creatorId)
+    return this.model
+      .find({ creator: creatorId })
+      .populate('creator', 'name surname avatarUrl')
   }
 
   async findVideoByUserId(userId, videoId) {
