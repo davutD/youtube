@@ -75,7 +75,6 @@ export const useMainStore = defineStore(
       userVideoState.error = null
       try {
         const response = await apiClient.get(`/videos/search?userId=${creatorId}`)
-        console.log(response.data)
         userVideoState.data = response.data
       } catch (e) {
         console.error('Failed to fetch creator videos:', e)
@@ -86,13 +85,13 @@ export const useMainStore = defineStore(
     }
 
     async function makeComment(videoId, commentText) {
-      console.log(videoId, commentText)
       try {
         const response = await apiClient.post(`users/video/${videoId}/comments`, {
           content: commentText,
         })
         if (selectedVideoState.data && selectedVideoState.data.comments) {
-          selectedVideoState.data.comments.unshift(response.data)
+          selectedVideoState.data.comments = [response.data, ...selectedVideoState.data.comments]
+          selectedVideoState.data.totalCommentCount++
         }
       } catch (e) {
         console.error('Failed to post comment:', e)
@@ -110,7 +109,7 @@ export const useMainStore = defineStore(
         if (!parentComment.comments) {
           parentComment.comments = []
         }
-        parentComment.comments.unshift(response.data)
+        parentComment.comments = [response.data, ...(parentComment.comments || [])]
         parentComment.repliesLoaded = true
 
         if (selectedVideoState.data) {
