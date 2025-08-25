@@ -86,13 +86,14 @@ export const useMainStore = defineStore(
 
     async function makeComment(videoId, commentText) {
       try {
-        const response = await apiClient.post(`users/video/${videoId}/comments`, {
+        await apiClient.post(`users/video/${videoId}/comments`, {
           content: commentText,
         })
-        if (selectedVideoState.data && selectedVideoState.data.comments) {
-          selectedVideoState.data.comments = [response.data, ...selectedVideoState.data.comments]
-          selectedVideoState.data.totalCommentCount++
-        }
+        await fetchVideoById(videoId)
+        // if (selectedVideoState.data && selectedVideoState.data.comments) {
+        //   selectedVideoState.data.comments = [response.data, ...selectedVideoState.data.comments]
+        //   selectedVideoState.data.totalCommentCount++
+        // }
       } catch (e) {
         console.error('Failed to post comment:', e)
       }
@@ -100,21 +101,11 @@ export const useMainStore = defineStore(
 
     async function replyComment(videoId, parentComment, replyText) {
       try {
-        const response = await apiClient.post(
-          `/users/video/${videoId}/comments/${parentComment._id}`,
-          {
-            content: replyText,
-          },
-        )
-        if (!parentComment.comments) {
-          parentComment.comments = []
-        }
-        parentComment.comments = [response.data, ...(parentComment.comments || [])]
-        parentComment.repliesLoaded = true
-
-        if (selectedVideoState.data) {
-          selectedVideoState.data.totalCommentCount++
-        }
+        await apiClient.post(`/users/video/${videoId}/comments/${parentComment._id}`, {
+          content: replyText,
+        })
+        await fetchVideoById(videoId)
+        await fetchReplies(parentComment)
       } catch (e) {
         console.error('Failed to post reply:', e)
       }
