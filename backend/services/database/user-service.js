@@ -207,7 +207,7 @@ class UserService extends BaseService {
     if (!videoExists) {
       throw new Error('Video could not be found.')
     }
-    const comment = await commentService.insert({
+    let comment = await commentService.insert({
       creator: user._id,
       video: videoId,
       ...content,
@@ -219,6 +219,8 @@ class UserService extends BaseService {
       $addToSet: { comments: comment._id },
       $inc: { totalCommentCount: 1 },
     })
+
+    comment = await comment.populate('creator', 'name surname avatarUrl')
 
     return comment
   }
@@ -261,7 +263,7 @@ class UserService extends BaseService {
       )
     }
 
-    const newComment = await commentService.insert({
+    let newComment = await commentService.insert({
       creator: user._id,
       video: videoId,
       parentComment: parentComment._id,
@@ -277,6 +279,8 @@ class UserService extends BaseService {
       $addToSet: { comments: newComment._id },
       $inc: { totalCommentCount: 1 },
     })
+
+    newComment = await newComment.populate('creator', 'name surname avatarUrl')
 
     return newComment
   }
