@@ -11,7 +11,7 @@ class VideoService extends BaseService {
   async find(id) {
     return this.model
       .findById(id)
-      .populate('creator', 'name surname')
+      .populate('creator', 'name surname subscribers')
       .populate({
         path: 'comments',
         match: { parentComment: { $exists: false } },
