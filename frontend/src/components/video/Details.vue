@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import SubscribeButton from '@/components/common/SubscribeButton.vue'
+import LikeDislikeButtons from '@/components/common/LikeDislikeButtons.vue'
 import UserProfilePicture from '@/components/common/UserProfilePicture.vue'
 
 const props = defineProps({
@@ -19,20 +20,23 @@ const formattedUploadDate = computed(() => {
 <template>
   <div class="video-details-container">
     <h2>{{ video.title }}</h2>
-    <div class="channel-info">
-      <router-link :to="`/channel/${video.creator._id}`">
-        <UserProfilePicture :user="video.creator" class="avatar" />
-      </router-link>
-
-      <img v-if="video.creator?.avatarUrl" :src="video.creator.avatarUrl" alt="channel avatar" />
-      <div>
-        <router-link :to="`/channel/${video.creator._id}`" class="channel-link">
-          <strong>{{ video.creator?.name }} {{ video.creator?.surname }}</strong>
+    <div class="actions-container">
+      <div class="channel-info">
+        <router-link :to="`/channel/${video.creator._id}`">
+          <UserProfilePicture :user="video.creator" class="avatar" />
         </router-link>
-        <p>{{ video.creator.subscriberCount ?? 0 }} subscribers</p>
+        <div class="channel-meta">
+          <router-link :to="`/channel/${video.creator._id}`" class="channel-link">
+            <strong>{{ video.creator?.name }} {{ video.creator?.surname }}</strong>
+          </router-link>
+          <p>{{ video.creator.subscriberCount ?? 0 }} subscribers</p>
+        </div>
+        <SubscribeButton :channel="video.creator" />
       </div>
-      <SubscribeButton :channel="video.creator" />
+
+      <LikeDislikeButtons :video="video" />
     </div>
+
     <div class="description-box">
       <strong>{{ video.likeCount || 0 }} views &bull; {{ formattedUploadDate }}</strong>
       <p>{{ video.description }}</p>
@@ -44,11 +48,20 @@ const formattedUploadDate = computed(() => {
 .video-details-container {
   margin-top: 1rem;
 }
+.actions-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+}
 .channel-info {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   margin: 1rem 0;
+}
+.channel-meta {
+  margin-right: 1rem;
 }
 .channel-info img {
   width: 40px;
