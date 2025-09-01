@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import SubscribeButton from '@/components/common/SubscribeButton.vue'
 import UserProfilePicture from '@/components/common/UserProfilePicture.vue'
 
 const props = defineProps({
@@ -30,6 +31,7 @@ const formattedUploadDate = computed(() => {
         </router-link>
         <p>{{ video.creator.subscriberCount ?? 0 }} subscribers</p>
       </div>
+      <SubscribeButton :channel="video.creator" />
     </div>
     <div class="description-box">
       <strong>{{ video.likeCount || 0 }} views &bull; {{ formattedUploadDate }}</strong>
