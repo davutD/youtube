@@ -50,8 +50,15 @@ const VideoSchema = new Schema(
       default: 'PROCESSING',
     },
     tags: [],
-    likeCount: Number,
-    dislikeCount: Number,
+    likeCount: {
+      type: Number,
+      default: 0,
+    },
+    dislikeCount: {
+      type: Number,
+      default: 0,
+    },
+
     comments: [
       {
         type: Schema.Types.ObjectId,
