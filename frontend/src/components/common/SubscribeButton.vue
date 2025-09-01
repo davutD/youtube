@@ -33,9 +33,17 @@ function handleSubscribeToggle() {
 <template>
   <div>
     <Button
+      v-if="authStore.isAuthenticated && authStore.user._id !== channel._id"
       :label="isSubscribed ? 'Subscribed' : 'Subscribe'"
       :icon="isSubscribed ? 'pi pi-check' : 'pi pi-bell'"
       :severity="isSubscribed ? 'secondary' : 'danger'"
+      rounded
+      @click="handleSubscribeToggle"
+    />
+    <Button
+      v-else-if="!authStore.isAuthenticated"
+      label="Subscribe"
+      icon="pi pi-bell"
       rounded
       @click="handleSubscribeToggle"
     />
