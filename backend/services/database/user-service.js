@@ -127,35 +127,28 @@ class UserService extends BaseService {
     }
     const uid = user._id
     const vid = video._id
-    const hasLiked = await videoService.model.exists({
-      _id: vid,
-      likedUsers: uid,
-    })
+    const hasLiked = video.likedUsers.includes(uid)
+
+    let updateOps = {}
     if (hasLiked) {
-      return videoService.model.findByIdAndUpdate(
-        vid,
-        {
-          $pull: { likedUsers: uid },
-          $inc: { likeCount: -1 },
+      updateOps = {
+        $pull: { likedUsers: uid },
+        $inc: { likeCount: -1 },
+      }
+    } else {
+      updateOps = {
+        $addToSet: { likedUsers: uid },
+        $pull: { dislikedUsers: uid },
+        $inc: {
+          likeCount: 1,
+          dislikeCount: video.dislikedUsers.includes(uid) ? -1 : 0,
         },
-        { new: true }
-      )
+      }
     }
-    const hasDisliked = await videoService.model.exists({
-      _id: vid,
-      dislikedUsers: uid,
-    })
-    const updateOps = {
-      $addToSet: { likedUsers: uid },
-      $inc: { likeCount: 1 },
-    }
-    if (hasDisliked) {
-      updateOps.$pull = { dislikedUsers: uid }
-      updateOps.$inc.dislikeCount = -1
-    }
-    return videoService.model.findByIdAndUpdate(vid, updateOps, {
-      new: true,
-    })
+
+    return videoService.model
+      .findByIdAndUpdate(vid, updateOps, { new: true })
+      .populate('creator', 'name surname subscribers')
   }
 
   async dislikeVideo(userId, videoId) {
@@ -169,33 +162,28 @@ class UserService extends BaseService {
     }
     const uid = user._id
     const vid = video._id
-    const hasDisliked = await videoService.model.exists({
-      _id: vid,
-      dislikedUsers: uid,
-    })
+    const hasDisliked = video.dislikedUsers.includes(uid)
+
+    let updateOps = {}
     if (hasDisliked) {
-      return videoService.model.findByIdAndUpdate(
-        vid,
-        {
-          $pull: { dislikedUsers: uid },
-          $inc: { dislikeCount: -1 },
+      updateOps = {
+        $pull: { dislikedUsers: uid },
+        $inc: { dislikeCount: -1 },
+      }
+    } else {
+      updateOps = {
+        $addToSet: { dislikedUsers: uid },
+        $pull: { likedUsers: uid },
+        $inc: {
+          dislikeCount: 1,
+          likeCount: video.likedUsers.includes(uid) ? -1 : 0,
         },
-        { new: true }
-      )
+      }
     }
-    const hasLiked = await videoService.model.exists({
-      _id: vid,
-      likedUsers: uid,
-    })
-    const updateOps = {
-      $addToSet: { dislikedUsers: uid },
-      $inc: { dislikeCount: 1 },
-    }
-    if (hasLiked) {
-      updateOps.$pull = { likedUsers: uid }
-      updateOps.$inc.likeCount = -1
-    }
-    return videoService.model.findByIdAndUpdate(vid, updateOps, { new: true })
+
+    return videoService.model
+      .findByIdAndUpdate(vid, updateOps, { new: true })
+      .populate('creator', 'name surname subscribers')
   }
 
   async makeComment(userId, videoId, content) {
