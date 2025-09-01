@@ -57,7 +57,7 @@ const createItems = computed(() => [
       if (authStore.isAuthenticated) {
         showUploadDialog.value = true
       } else {
-        router.push('/login')
+        router.push('/auth/login')
       }
     },
   },
