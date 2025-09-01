@@ -120,6 +120,36 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function likeVideo(video) {
+    if (!isAuthenticated.value) {
+      router.push('/auth/login')
+      return
+    }
+    try {
+      const response = await apiClient.post(`/users/likesVideo/${video._id}`)
+      if (mainStore.selectedVideoState.data) {
+        mainStore.selectedVideoState.data = response.data
+      }
+    } catch (error) {
+      console.error('Failed to like video:', error)
+    }
+  }
+
+  async function dislikeVideo(video) {
+    if (!isAuthenticated.value) {
+      router.push('/auth/login')
+      return
+    }
+    try {
+      const response = await apiClient.delete(`/users/likesVideo/${video._id}`)
+      if (mainStore.selectedVideoState.data) {
+        mainStore.selectedVideoState.data = response.data
+      }
+    } catch (error) {
+      console.error('Failed to dislike video:', error)
+    }
+  }
+
   return {
     user,
     publicProfile,
@@ -133,5 +163,7 @@ export const useAuthStore = defineStore('auth', () => {
     fetchUserById,
     subscribe,
     unsubscribe,
+    likeVideo,
+    dislikeVideo,
   }
 })
