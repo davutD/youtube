@@ -3,12 +3,16 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import router from '@/router'
 
+import { useMainStore } from './store'
+
 const apiClient = axios.create({
   baseURL: 'http://localhost:3000',
   withCredentials: true,
 })
 
 export const useAuthStore = defineStore('auth', () => {
+  const mainStore = useMainStore()
+
   const user = ref(null)
   const publicProfile = ref(null)
   const isLoading = ref(false)
@@ -81,9 +85,13 @@ export const useAuthStore = defineStore('auth', () => {
     }
     try {
       await apiClient.post(`/users/subscribers/${channelId}`)
-      if (publicProfile.value && publicProfile.value._id === channelId) {
+      if (publicProfile.value?._id === channelId) {
         publicProfile.value.subscribers.push(user.value._id)
         publicProfile.value.subscriberCount++
+      }
+      if (mainStore.selectedVideoState.data?.creator._id === channelId) {
+        mainStore.selectedVideoState.data.creator.subscribers.push(user.value._id)
+        mainStore.selectedVideoState.data.creator.subscriberCount++
       }
     } catch (error) {
       console.error('Failed to subscribe:', error)
@@ -94,11 +102,18 @@ export const useAuthStore = defineStore('auth', () => {
     if (!isAuthenticated.value) return
     try {
       await apiClient.delete(`/users/subscribers/${channelId}`)
-      if (publicProfile.value && publicProfile.value._id === channelId) {
+      if (publicProfile.value?._id === channelId) {
         publicProfile.value.subscribers = publicProfile.value.subscribers.filter(
           (id) => id !== user.value._id,
         )
         publicProfile.value.subscriberCount--
+      }
+      if (mainStore.selectedVideoState.data?.creator._id === channelId) {
+        mainStore.selectedVideoState.data.creator.subscribers =
+          mainStore.selectedVideoState.data.creator.subscribers.filter(
+            (id) => id !== user.value._id,
+          )
+        mainStore.selectedVideoState.data.creator.subscriberCount--
       }
     } catch (error) {
       console.error('Failed to unsubscribe:', error)
