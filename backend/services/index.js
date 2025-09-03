@@ -3,6 +3,7 @@ const userService = require('./database/user-service')
 const videoService = require('./database/video-service')
 const commentService = require('./database/comment-service')
 const cloudStorageService = require('./cloud/storage')
+const notificationService = require('./notification/notification-service')
 
 module.exports = {
   authService,
@@ -10,4 +11,5 @@ module.exports = {
   videoService,
   commentService,
   cloudStorageService,
+  notificationService,
 }
