@@ -19,6 +19,8 @@ class AuthService extends BaseService {
       surname: user.surname,
     }
     req.session.user = userSessionData
+    await req.session.save()
+
     return userSessionData
   }
 
@@ -36,6 +38,8 @@ class AuthService extends BaseService {
       surname: newUser.surname,
     }
     req.session.user = userSessionData
+    await req.session.save()
+
     return userSessionData
   }
 }
